@@ -1,1 +1,3 @@
-unittest
+python-binance
+ta
+panda
