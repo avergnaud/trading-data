@@ -10,6 +10,10 @@ python -m pip install -r requirements.txt
 mongo_init_db.py
 '''
 
+## run
+
+Flask running on http://127.0.0.1:5000/
+
 ## doc
 [https://docs.python-guide.org/writing/structure/](https://docs.python-guide.org/writing/structure/)
 

@@ -66,8 +66,28 @@ class BinanceClient:
         return df.copy()
 
 
-# if __name__ == "__main__":
-    # cclient = BinanceClient()
+    def get_pairs(self):
+        """Calls the Binance API, gets available trading pairs
+
+        Parameters
+        ----------
+
+        Returns
+        -------
+        pandas.core.frame.DataFrame
+            ?
+        """
+
+        client = Client()
+        pairs = client.get_all_tickers()
+        return pairs
+
+
+if __name__ == "__main__":
+    cclient = BinanceClient()
+    pairs = cclient.get_pairs()
+    print(pairs)
+    # 1700
     # ohlc = cclient.get_ohlc('ETHUSDT', '5m', '1 hour ago UTC')
     # ohlc = cclient.get_ohlc('ETHUSDT', '1h', 1635724800000)
     # print(ohlc.size)

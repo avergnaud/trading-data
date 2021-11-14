@@ -6,6 +6,14 @@ mongo_client = MongoClient('mongodb://localhost:27017')
 # create a new database instance - if not exist
 db = mongo_client.trading_data
 
+# la collection pairs contient les paires de trading (tickers) pour les différents exchanges. Exemple :
+# {
+#   "_id" : ObjectId("6191062d60a19c6a6cfaef91"),
+#   "exchange" : "binance",
+#   "pair" : "ETHEUR"
+# }
+pairs = db.pairs
+
 # la collection ohlc contient les données ohlc. Exemple :
 # {
 #   "_id" : ObjectId("6191062d60a19c6a6cfaef92"),
@@ -33,6 +41,10 @@ ohlc_definition = db.ohlc_definition
 
 def get_db():
     return db
+
+
+def get_pairs_collection():
+    return pairs
 
 
 def get_ohlc_collection():
