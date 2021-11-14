@@ -11,13 +11,10 @@ def get_all():
     # list
     pairs = []
     for pair in pairs_collection.find({}):
+        pair['_id'] = str(pair['_id'])
         pairs.append(pair)
 
-    # dict
-    results_dict = dict()
-    for index, value in enumerate(pairs):
-        results_dict[index] = {'exchange': value['exchange'], 'pair': value['pair']}
-    return results_dict
+    return pairs
 
 
 if __name__ == "__main__":

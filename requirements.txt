@@ -3,3 +3,5 @@ ta
 panda
 pymongo
 Flask
+flask-cors
+gunicorn
