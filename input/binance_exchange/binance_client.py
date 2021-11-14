@@ -6,12 +6,12 @@ class BinanceClient:
     def __init__(self):
         print('constructing BinanceClient')
 
-    def get_ohlc(self, symbol, interval, start_str):
+    def get_ohlc(self, pair, interval, start):
         """Calls the Binance API, transforms some data, return the klines data
 
         Parameters
         ----------
-        symbol : str
+        pair : str
             trading pair. Example: "ETHUSDT"
         interval : str.
             One of Binance Kline interval
@@ -30,7 +30,7 @@ class BinanceClient:
             KLINE_INTERVAL_3DAY = '3d'
             KLINE_INTERVAL_1WEEK = '1w'
             KLINE_INTERVAL_1MONTH = '1M'
-        start_str : (str|int)
+        start : (str|int)
             Start date string in UTC format or timestamp in milliseconds
             Example : "01 november 2021", 1635724800000
 
@@ -39,13 +39,12 @@ class BinanceClient:
         pandas.core.frame.DataFrame
             a panda DataFrame containing timestamp (index), open, high, low, close
         """
-        """Get an addition."""
 
         client = Client()
 
-        klinesT = client.get_historical_klines(symbol, interval, start_str)
+        klines_t = client.get_historical_klines(pair, interval, str(start))
 
-        df = pd.DataFrame(klinesT,
+        df = pd.DataFrame(klines_t,
                           columns=['timestamp', 'open', 'high', 'low', 'close', 'volume', 'close_time', 'quote_av',
                                    'trades', 'tb_base_av', 'tb_quote_av', 'ignore'])
         df['close'] = pd.to_numeric(df['close'])
@@ -65,3 +64,14 @@ class BinanceClient:
         df.index = pd.to_datetime(df.index, unit='ms')
         del df['timestamp']
         return df.copy()
+
+
+# if __name__ == "__main__":
+    # cclient = BinanceClient()
+    # ohlc = cclient.get_ohlc('ETHUSDT', '5m', '1 hour ago UTC')
+    # ohlc = cclient.get_ohlc('ETHUSDT', '1h', 1635724800000)
+    # print(ohlc.size)
+
+    # client = Client()
+    # klines_t = client.get_historical_klines('ETHUSDT', '1d', "01 july 2017", "10 september 2017")
+    # print(klines_t)
