@@ -1,11 +1,5 @@
 # trading data
 
-Uniquement pour Heroku (pas la cible runtime):
-* requirements.txt / gunicorn
-* runtime.txt
-* Procfile
-
-
 ## install
 '''
 python -m pip install -r requirements.txt
