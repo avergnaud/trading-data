@@ -1,4 +1,4 @@
-from persistence.mongo_constants import get_db, get_ohlc_collection
+from persistence.mongo_constants import get_ohlc_collection
 from pymongo import DESCENDING
 
 # db: trading_data
@@ -58,20 +58,24 @@ def get_last_timestamp(ohlc):
 
 
 if __name__ == "__main__":
-    ohlc1 = {'exchange': 'binance', 'pair': 'ETHEUR', 'interval': '1h', 'timestamp': 1635724800000,
+    ohlc1 = {'exchange': 'FAKE', 'pair': 'ETHEUR', 'interval': '1h', 'timestamp': 1635724800000,
              'open': 1000.1234567,
              'high': 2000.2345678, 'low': 500.3456789, 'close': 1750, 'volume': 10000}
     insert_or_update(ohlc1)
-    ohlc2 = {'exchange': 'binance', 'pair': 'ETHEUR', 'interval': '1h', 'timestamp': 1635730000000,
+    ohlc2 = {'exchange': 'FAKE', 'pair': 'ETHEUR', 'interval': '1h', 'timestamp': 1635730000000,
              'open': 1002.1234567,
              'high': 2002.2345678, 'low': 504.3456789, 'close': 1751, 'volume': 3000}
     insert_or_update(ohlc2)
-    ohlc3 = {'exchange': 'binance', 'pair': 'ETHEUR', 'interval': '1h', 'timestamp': 1635730000000, 'open': 1003,
+    ohlc3 = {'exchange': 'FAKE', 'pair': 'ETHEUR', 'interval': '1h', 'timestamp': 1635730000000, 'open': 1003,
              'high': 2002.2345678, 'low': 504.3456789, 'close': 1751, 'volume': 3000}
     insert_or_update(ohlc3)
-    ohlc4 = {'exchange': 'binance', 'pair': 'ETHEUR', 'interval': '1h', 'timestamp': 1635800000000,
+    ohlc4 = {'exchange': 'FAKE', 'pair': 'ETHEUR', 'interval': '1h', 'timestamp': 1635800000000,
              'open': 1002.1234567,
              'high': 2002.2345678, 'low': 504.3456789, 'close': 1751, 'volume': 3000}
     insert_or_update(ohlc4)
+    ohlc5 = {'exchange': 'FAKE', 'pair': 'ETHEUR', 'interval': '1h', 'timestamp': 1635800000000,
+             'open': 1002.1234567,
+             'high': 2002.2345678, 'low': 504.3456789, 'close': 1751, 'volume': 4000}
+    insert_or_update(ohlc5)
     result = get_last_timestamp({ 'exchange': 'binance', 'pair': 'ETHEUR', 'interval': '1h' })
     print(result)

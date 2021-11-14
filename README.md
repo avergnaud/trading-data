@@ -1,10 +1,17 @@
 # trading data
 
-[https://docs.python-guide.org/writing/structure/](https://docs.python-guide.org/writing/structure/)
-
+## install
 '''
 python -m pip install -r requirements.txt
 '''
+
+## init
+'''
+mongo_init_db.py
+'''
+
+## doc
+[https://docs.python-guide.org/writing/structure/](https://docs.python-guide.org/writing/structure/)
 
 [https://python-binance.readthedocs.io/en/latest/market_data.html](https://python-binance.readthedocs.io/en/latest/market_data.html)
 
