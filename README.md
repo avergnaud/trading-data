@@ -5,6 +5,14 @@
 python -m pip install -r requirements.txt
 '''
 
+## start | stop mongodb service
+
+### on windows
+start powershell as admin
+'''
+net start|stop MongoDB
+'''
+
 ## init
 '''
 mongo_init_db.py

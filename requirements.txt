@@ -4,3 +4,4 @@ panda
 pymongo
 Flask
 flask-cors
+krakenex
