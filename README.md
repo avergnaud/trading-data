@@ -5,6 +5,12 @@
 python -m pip install -r requirements.txt
 '''
 
+### powershell
+
+Get-ChildItem Env:PYTHONPATH
+
+$env:PYTHONPATH = ${pwd}
+
 ## start | stop mongodb service
 
 ### on windows
@@ -38,4 +44,7 @@ Flask running on http://127.0.0.1:5000/
 '''
 & 'C:\Program Files\MongoDB\Server\5.0\bin\mongo.exe'
 '''
+
 db.ohlc.find({exchange: 'binance', pair: 'ETHEUR', interval: '1h'}).sort( { timestamp: -1 } ).limit(1)
+
+db.ohlc.aggregate({$group: {_id: {"exchange": "$exchange", "pair": "$pair", "interval": "$interval"}, count:{"$sum": 1}}})

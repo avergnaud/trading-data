@@ -23,6 +23,10 @@ class FtxClient:
         -------
         list
         """
+
+        if api_key is None:
+            return []
+
         s = Session()
 
         ts = int(time.time() * 1000)

@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
-from persistence import exchanges_dao, pairs_dao, intervales_dao
+from persistence import exchanges_dao, pairs_dao, intervales_dao, ohlc_definition_dao
 
 app = Flask(__name__)
 CORS(app)
@@ -29,6 +29,13 @@ def get_exchange_pairs(exchange):
 @app.route("/exchanges/<exchange>/intervals")
 def get_exchange_intervals(exchange):
     liste = intervales_dao.get_by_exchange(exchange)
+    return jsonify(liste)
+
+
+# /ohlc_definitions
+@app.route("/ohlc_definitions")
+def get_ohlc_definitions():
+    liste = ohlc_definition_dao.get_all()
     return jsonify(liste)
 
 

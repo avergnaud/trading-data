@@ -46,6 +46,15 @@ def find(ohlc_definition):
     return result
 
 
+def get_all():
+    # list
+    ohlc_definitions = []
+    for ohlc_definition in ohlc_definition_collection.find({}):
+        ohlc_definition['_id'] = str(ohlc_definition['_id'])
+        ohlc_definitions.append(ohlc_definition)
+    return ohlc_definitions
+
+
 def findById(id):
     result = ohlc_definition_collection.find_one(
         {
@@ -77,13 +86,13 @@ def delete(ohlc_definition):
 
 
 if __name__ == "__main__":
-    ohlc_definition1 = {'exchange': 'binance','pair': 'ETHEUR', 'interval': '1h', 'update_cron': '*/10 * * * *'}
+    ohlc_definition1 = {'exchange': 'kraken','pair': 'BTCUSD', 'interval': 1440, 'update_cron': '0 * * * *'}
     insert_or_update(ohlc_definition1)
-    ohlc_definition2 = {'exchange': 'binance','pair': 'ETHEUR', 'interval': '1h', 'update_cron': '*/15 * * * *'}
-    insert_or_update(ohlc_definition2)
-    result1 = find({'exchange': 'binance','pair': 'ETHEUR', 'interval': '1h'})
-    print(result1)
-    id = str(result1['_id'])
-    result2 = findById(id)
-    print(result2)
-    delete({'exchange': 'binance','pair': 'ETHEUR', 'interval': '1h'})
+    # ohlc_definition2 = {'exchange': 'binance','pair': 'ETHEUR', 'interval': '1h', 'update_cron': '*/15 * * * *'}
+    # insert_or_update(ohlc_definition2)
+    # result1 = find({'exchange': 'binance','pair': 'ETHEUR', 'interval': '1h'})
+    # print(result1)
+    # id = str(result1['_id'])
+    # result2 = findById(id)
+    # print(result2)
+    # delete({'exchange': 'binance','pair': 'ETHEUR', 'interval': '1h'})
