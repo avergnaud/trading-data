@@ -23,14 +23,17 @@ def insert_or_update(ohlc_definition):
     """
 
     # http://api.mongodb.com/python/current/api/pymongo/operations.html#pymongo.operations.UpdateOne
-    ohlc_definition_collection.replace_one(
-        {
+    key = {
             "exchange": ohlc_definition["exchange"],
             "pair": ohlc_definition["pair"],
             "interval": ohlc_definition["interval"]
-        },
+        }
+    ohlc_definition_collection.replace_one(
+        key,
         ohlc_definition,
         upsert=True)
+    # replace_one does not return the upserted document...
+    return find(key)
 
 
 # READ
@@ -43,6 +46,7 @@ def find(ohlc_definition):
             "pair": ohlc_definition["pair"],
             "interval": ohlc_definition["interval"]
         })
+    result['_id'] = str(result['_id'])
     return result
 
 

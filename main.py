@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from persistence import exchanges_dao, pairs_dao, intervales_dao, ohlc_definition_dao
 
@@ -33,11 +33,15 @@ def get_exchange_intervals(exchange):
 
 
 # /ohlc_definitions
-@app.route("/ohlc_definitions")
-def get_ohlc_definitions():
-    liste = ohlc_definition_dao.get_all()
-    return jsonify(liste)
+@app.route("/ohlc_definitions", methods=['GET', 'POST'])
+def ohlc_definitions():
+    if request.method == 'POST':
+        result = ohlc_definition_dao.insert_or_update(request.json)
+        return jsonify(result), 200
+    else:
+        liste = ohlc_definition_dao.get_all()
+        return jsonify(liste)
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     app.run(debug=True)
