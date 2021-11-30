@@ -51,8 +51,9 @@ def ohlc_definitions():
 # /launch_cron/:exchange_name
 @app.route("/launch_cron/<exchange>")
 def launch_cron(exchange):
-    result = cron.binance_cron.launch(exchange)
-    return jsonify(result), 200
+    cron.binance_cron.create_cron(exchange)
+    return jsonify('ok'), 200
+
 
 if __name__ == "__main__":
     app.run(debug=True)
