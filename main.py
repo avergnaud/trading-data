@@ -35,11 +35,14 @@ def get_exchange_intervals(exchange):
 
 
 # /ohlc_definitions
-@app.route("/ohlc_definitions", methods=['GET', 'POST'])
+@app.route("/ohlc_definitions", methods=['GET', 'POST', 'DELETE'])
 def ohlc_definitions():
     if request.method == 'POST':
         result = ohlc_definition_dao.insert_or_update(request.json)
         return jsonify(result), 200
+    elif request.method == 'DELETE':
+        ohlc_definition_dao.delete(request.json)
+        return jsonify(request.json), 204
     else:
         liste = ohlc_definition_dao.get_all()
         return jsonify(liste)
