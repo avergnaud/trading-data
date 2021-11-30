@@ -30,10 +30,20 @@ def run_continuously(interval=1):
 
 
 def background_job(test):
-    print('Hello je je suis dns le thread : ', test)
+    print('Hello je suis dans le thread : ', test)
 
 
-schedule.every().second.do(background_job, 'test')
+def launch_cron(exchange):
+    schedule.every().second.do(background_job, exchange)
+
+    run_stop_continuously = run_continuously()
+
+    # Do some other things...
+    time.sleep(10)
+
+    # Stop the background thread
+    run_stop_continuously.set()
+
 
 if __name__ == "__main__":
     # Start the background thread

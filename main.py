@@ -53,14 +53,7 @@ def ohlc_definitions():
 # /launch_cron/:exchange_name
 @app.route("/launch_cron/<exchange>")
 def launch_cron(exchange):
-    # Start the background thread
-    stop_run_continuously = binance_cron.run_continuously()
-
-    # Do some other things...
-    time.sleep(10)
-
-    # Stop the background thread
-    stop_run_continuously.set()
+    binance_cron.launch_cron(exchange)
 
     return jsonify('ok'), 200
 
