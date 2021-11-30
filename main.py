@@ -1,7 +1,9 @@
+import time
+
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
-import cron.binance_cron
+from cron import binance_cron
 from persistence import exchanges_dao, pairs_dao, intervales_dao, ohlc_definition_dao
 
 app = Flask(__name__)
@@ -51,7 +53,15 @@ def ohlc_definitions():
 # /launch_cron/:exchange_name
 @app.route("/launch_cron/<exchange>")
 def launch_cron(exchange):
-    cron.binance_cron.create_cron(exchange)
+    # Start the background thread
+    stop_run_continuously = binance_cron.run_continuously()
+
+    # Do some other things...
+    time.sleep(10)
+
+    # Stop the background thread
+    stop_run_continuously.set()
+
     return jsonify('ok'), 200
 
 
