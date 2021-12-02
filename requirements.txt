@@ -5,4 +5,4 @@ pymongo
 Flask
 flask-cors
 krakenex
-python-crontab
+schedule
