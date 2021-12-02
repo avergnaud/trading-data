@@ -16,14 +16,14 @@ class FtxClient:
         print('constructing FTXClient')
         self.x = ftx.FtxClient()
 
-        def get_pairs(self):
-            """Calls the FTX API, gets available trading pairs
-           Parameters
-           ----------
-           Returns
-           -------
-           list
-           """
+    def get_pairs(self):
+        """Calls the FTX API, gets available trading pairs
+       Parameters
+       ----------
+       Returns
+       -------
+       list
+       """
 
         liste = []
         for key in self.x.get_markets():

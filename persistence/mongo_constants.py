@@ -59,7 +59,7 @@ ohlc = db.ohlc
 BINANCE = 'binance'
 KRAKEN = 'kraken'
 FTX = 'ftx'
-
+GATE = 'gate'
 
 def get_db():
     return db
