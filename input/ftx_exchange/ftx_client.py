@@ -1,7 +1,9 @@
-import os
-import time
 import hmac
 import json
+import os
+import time
+
+import ftx
 from requests import Request, Session
 
 api_endpoint = 'https://ftx.com/api'
@@ -12,39 +14,56 @@ api_secret = os.getenv('FTX_API_SECRET')
 class FtxClient:
     def __init__(self):
         print('constructing FTXClient')
+        self.x = ftx.FtxClient()
 
     def get_pairs(self):
         """Calls the FTX API, gets available trading pairs
 
-        Parameters
-        ----------
+       Parameters
+       ----------
 
-        Returns
-        -------
-        list
-        """
+       Returns
+       -------
+       list
+       """
 
-        if api_key is None:
-            return []
+        liste = []
+        for key in self.x.get_markets():
+            liste.append(key['name'])
+        return liste
 
-        s = Session()
-
-        ts = int(time.time() * 1000)
-        request = Request('GET', api_endpoint + '/markets')
-        prepared = request.prepare()
-        signature_payload = f'{ts}{prepared.method}{prepared.path_url}'.encode()
-        signature = hmac.new(api_secret.encode(), signature_payload, 'sha256').hexdigest()
-
-        request.headers['FTX-KEY'] = api_key
-        request.headers['FTX-SIGN'] = signature
-        request.headers['FTX-TS'] = str(ts)
-
-        resp = s.send(prepared)
-
-        # print(resp.status_code)
-        my_json_string = resp.content.decode('utf8').replace("'", '"')
-        my_json = json.loads(my_json_string)
-        return my_json['result']
+    # def get_pairs(self):
+    #     """Calls the FTX API, gets available trading pairs
+    #
+    #     Parameters
+    #     ----------
+    #
+    #     Returns
+    #     -------
+    #     list
+    #     """
+    #
+    #     if api_key is None:
+    #         return []
+    #
+    #     s = Session()
+    #
+    #     ts = int(time.time() * 1000)
+    #     request = Request('GET', api_endpoint + '/markets')
+    #     prepared = request.prepare()
+    #     signature_payload = f'{ts}{prepared.method}{prepared.path_url}'.encode()
+    #     signature = hmac.new(api_secret.encode(), signature_payload, 'sha256').hexdigest()
+    #
+    #     request.headers['FTX-KEY'] = api_key
+    #     request.headers['FTX-SIGN'] = signature
+    #     request.headers['FTX-TS'] = str(ts)
+    #
+    #     resp = s.send(prepared)
+    #
+    #     # print(resp.status_code)
+    #     my_json_string = resp.content.decode('utf8').replace("'", '"')
+    #     my_json = json.loads(my_json_string)
+    #     return my_json['result']
 
     def get_ohlc(self, pair, interval, since):
         """Calls the FTX API...
@@ -102,5 +121,7 @@ class FtxClient:
 
 if __name__ == "__main__":
     client = FtxClient()
-    list = client.get_ohlc('','','')
-    print(list)
+    # list = client.get_ohlc('', '', '')
+    # print(list)
+    pairs = client.get_pairs()
+    print(pairs)

@@ -52,27 +52,28 @@ class KrakenClient:
         del df['timestamp']
         return df.copy()
 
+    def get_pairs(self):
+        """Calls the Kraken API, gets available trading pairs
 
-def get_pairs(self):
-    """Calls the Kraken API, gets available trading pairs
+        Parameters
+        ----------
 
-    Parameters
-    ----------
+        Returns
+        -------
+        liste
+        """
 
-    Returns
-    -------
-    liste
-    """
-
-    resp = self.k.query_public('AssetPairs')
-    result = resp['result'].keys()
-    liste = []
-    for key in result:
-        liste.append(key)
-    return liste
+        resp = self.k.query_public('AssetPairs')
+        result = resp['result'].keys()
+        liste = []
+        for key in result:
+            liste.append(key)
+        return liste
 
 
 if __name__ == "__main__":
     client = KrakenClient()
-    ohlc = client.get_ohlc('XETHZEUR', 60, 1499000000) # UTC 2017-07-02 12:53:20
-    print(ohlc.size)
+    # ohlc = client.get_ohlc('XETHZEUR', 60, 1499000000)  # UTC 2017-07-02 12:53:20
+    # print(ohlc.size)
+    pairs = client.get_pairs()
+    print(pairs)
