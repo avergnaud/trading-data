@@ -6,9 +6,8 @@ EXCHANGE = 'binance'
 
 
 # used as a key in feed_cron_manager.py
-class BinanceFeed():
+class BinanceFeed:
     def __init__(self, pair, interval):
-        print('constructing BinanceFeed')
         self.exchange = EXCHANGE
         self.pair = pair
         self.interval = interval
