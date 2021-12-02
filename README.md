@@ -47,4 +47,6 @@ Flask running on http://127.0.0.1:5000/
 
 db.ohlc.find({exchange: 'binance', pair: 'ETHEUR', interval: '1h'}).sort( { timestamp: -1 } ).limit(1)
 
+db.ohlc.find({exchange: 'binance', pair: 'BTCUSDT', interval: '4h'}).sort( { timestamp: -1 } ).limit(1)
+
 db.ohlc.aggregate({$group: {_id: {"exchange": "$exchange", "pair": "$pair", "interval": "$interval"}, count:{"$sum": 1}}})

@@ -1,13 +1,19 @@
-import time
-
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
-from cron import binance_cron
+from cron import feed_cron_manager
 from persistence import exchanges_dao, pairs_dao, intervales_dao, ohlc_definition_dao
 
 app = Flask(__name__)
 CORS(app)
+
+
+@app.before_first_request
+def before_first_request_func():
+    print("Relaunching crons on startup !")
+    ohlc_definitions = ohlc_definition_dao.get_all()
+    for ohlc_definition in ohlc_definitions:
+        feed_cron_manager.add_cron(ohlc_definition)
 
 
 @app.route("/")
@@ -41,22 +47,17 @@ def get_exchange_intervals(exchange):
 def ohlc_definitions():
     if request.method == 'POST':
         result = ohlc_definition_dao.insert_or_update(request.json)
+        feed_cron_manager.add_cron(result)
         return jsonify(result), 200
     elif request.method == 'DELETE':
         ohlc_definition_dao.delete(request.json)
+        feed_cron_manager.remove_cron(request.json)
         return jsonify(request.json), 204
     else:
         liste = ohlc_definition_dao.get_all()
         return jsonify(liste)
 
 
-# /launch_cron/:exchange_name
-@app.route("/launch_cron/<exchange>")
-def launch_cron(exchange):
-    binance_cron.launch_cron(exchange)
-
-    return jsonify('ok'), 200
-
-
 if __name__ == "__main__":
+    print('RUNNING!')
     app.run(debug=True)

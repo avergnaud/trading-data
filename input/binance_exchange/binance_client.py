@@ -4,7 +4,7 @@ from binance.client import Client
 
 class BinanceClient:
     def __init__(self):
-        print('constructing BinanceClient')
+        pass
 
     def get_ohlc(self, pair, interval, start):
         """Calls the Binance API, transforms some data, return the klines data

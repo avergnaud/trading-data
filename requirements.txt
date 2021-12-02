@@ -4,6 +4,8 @@ pandas
 pymongo
 Flask
 flask-cors
+flask_script
 krakenex
 schedule
 ftx
+requests

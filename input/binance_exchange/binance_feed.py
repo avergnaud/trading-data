@@ -5,7 +5,8 @@ from input.binance_exchange.binance_client import BinanceClient
 EXCHANGE = 'binance'
 
 
-class BinanceFeed:
+# used as a key in feed_cron_manager.py
+class BinanceFeed():
     def __init__(self, pair, interval):
         print('constructing BinanceFeed')
         self.exchange = EXCHANGE
@@ -34,6 +35,17 @@ class BinanceFeed:
                     'low': ohlc_dataframe['low'][ind], 'close': ohlc_dataframe['close'][ind],
                     'volume': ohlc_dataframe['volume'][ind]}
             ohlc_dao.insert_or_update(ohlc)
+
+    def __hash__(self):
+        return hash((self.pair, self.interval))
+
+    def __eq__(self, other):
+        return (self.pair, self.interval) == (other.pair, other.interval)
+
+    def __ne__(self, other):
+        # Not strictly necessary, but to avoid having both x==y and x!=y
+        # True at the same time
+        return not(self == other)
 
 
 if __name__ == "__main__":

@@ -3,7 +3,7 @@ from bson.objectid import ObjectId
 
 # db: trading_data
 # collection: ohlc_definition
-# fields: exchange pair interval update_cron
+# fields: exchange pair interval update_rate
 # uniqueness: exchange pair interval
 
 ohlc_definition_collection = get_ohlc_definition_collection()
@@ -90,13 +90,5 @@ def delete(ohlc_definition):
 
 
 if __name__ == "__main__":
-    ohlc_definition1 = {'exchange': 'kraken','pair': 'BTCUSD', 'interval': 1440, 'update_cron': '0 * * * *'}
+    ohlc_definition1 = {'exchange': 'kraken','pair': 'BTCUSD', 'interval': 1440, 'update_rate': '5'}
     insert_or_update(ohlc_definition1)
-    # ohlc_definition2 = {'exchange': 'binance','pair': 'ETHEUR', 'interval': '1h', 'update_cron': '*/15 * * * *'}
-    # insert_or_update(ohlc_definition2)
-    # result1 = find({'exchange': 'binance','pair': 'ETHEUR', 'interval': '1h'})
-    # print(result1)
-    # id = str(result1['_id'])
-    # result2 = findById(id)
-    # print(result2)
-    # delete({'exchange': 'binance','pair': 'ETHEUR', 'interval': '1h'})
