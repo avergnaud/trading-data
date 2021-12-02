@@ -1,6 +1,6 @@
 python-binance
 ta
-panda
+pandas
 pymongo
 Flask
 flask-cors
