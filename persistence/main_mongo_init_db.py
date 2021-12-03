@@ -42,13 +42,13 @@ ftxClient = FtxClient()
 ftx_pairs = ftxClient.get_pairs()
 for ftx_pair in ftx_pairs:
     if pairs.find_one({'exchange': FTX, 'pair': ftx_pair}) is None:
-        pairs.insert_one({'exchange': FTX, 'pair': ftx_pair['name']})
+        pairs.insert_one({'exchange': FTX, 'pair': ftx_pair})
 # GATE
 gateClient = GateClient()
 gate_pairs = gateClient.get_pairs()
 for gate_pair in gate_pairs:
     if pairs.find_one({'exchange': GATE, 'pair': gate_pair}) is None:
-        pairs.insert_one({'exchange': GATE, 'pair': gate_pair['name']})
+        pairs.insert_one({'exchange': GATE, 'pair': gate_pair})
 
 # intervals
 intervals = get_intervals_collection()

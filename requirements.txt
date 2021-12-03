@@ -9,3 +9,4 @@ krakenex
 schedule
 ftx
 requests
+gate_api
