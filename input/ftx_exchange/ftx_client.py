@@ -4,6 +4,7 @@ import os
 import time
 
 import ftx
+import pandas as pd
 from requests import Request, Session
 
 api_endpoint = 'https://ftx.com/api'
@@ -29,6 +30,47 @@ class FtxClient:
         for key in self.x.get_markets():
             liste.append(key['name'])
         return liste
+
+    def get_ohlc(self, pair, interval, since):
+        """Calls the FTX API...
+
+        Parameters
+        ----------
+        market_name ---> pair : str
+            trading pair. Example: "BTC/USDT"
+        resolution --> interval : int.
+           15, 60, 300, 900, 3600, 14400, 86400, or any multiple of 86400 up to 30*86400
+        start_time --> since : int
+            Since date, timestamp in seconds
+            since=1548111600
+        limit = Mettre une limite très haute
+
+    Returns
+        -------
+        pandas.core.frame.DataFrame
+            a panda DataFrame containing time (index), open, high, low, close, volume
+
+        """
+        ret = self.x.get_historical_data(market_name=pair, resolution=interval, limit=50000,
+                                         start_time=since)
+
+        df = pd.DataFrame(ret,
+                          columns=['startTime', 'time', 'open', 'high', 'low', 'close', 'volume','timestamp'])
+
+        df['close'] = pd.to_numeric(df['close'])
+        df['high'] = pd.to_numeric(df['high'])
+        df['low'] = pd.to_numeric(df['low'])
+        df['open'] = pd.to_numeric(df['open'])
+        df['volume'] = pd.to_numeric(df['volume'])
+        df['timestamp'] = df['time']
+
+        del df['startTime']
+        del df['time']
+
+        df = df.set_index(df['timestamp'])
+        df.index = pd.to_datetime(df.index, unit='ms')
+        del df['timestamp']
+        return df.copy()
 
 
 def get_pairs_old(self):
@@ -65,7 +107,7 @@ def get_pairs_old(self):
     return my_json['result']
 
 
-def get_ohlc(self, pair, interval, since):
+def get_ohlc_old(self, pair, interval, since):
     """Calls the FTX API...
 
     Parameters
@@ -121,7 +163,8 @@ def get_ohlc(self, pair, interval, since):
 
 if __name__ == "__main__":
     client = FtxClient()
-    # list = client.get_ohlc('', '', '')
-    # print(list)
-    pairs = client.get_pairs()
-    print(pairs)
+    # pairs = client.get_pairs()
+    # print(pairs)
+    ohlcs = client.get_ohlc('BTC/USDT', 60, 1499000000)  # UTC 2017-07-02 12:53:20
+    print(ohlcs)
+    print(ohlcs.size)

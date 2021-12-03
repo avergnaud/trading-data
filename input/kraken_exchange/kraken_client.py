@@ -28,9 +28,7 @@ class KrakenClient:
             Krakenex utilise pykrakenapi
                 https://github.com/dominiktraxl/pykrakenapi
         """
-
         ret = self.k.query_public('OHLC', data={'pair': pair, 'interval': interval, 'since': since})
-
         # {"_id": ObjectId("6197feb16fa0141720dd2448"), "exchange": "kraken", "pair": "XXBTZUSD"}
 
         ohlcs = ret['result'][pair]
@@ -73,7 +71,7 @@ class KrakenClient:
 
 if __name__ == "__main__":
     client = KrakenClient()
-    # ohlc = client.get_ohlc('XETHZEUR', 60, 1499000000)  # UTC 2017-07-02 12:53:20
-    # print(ohlc.size)
-    pairs = client.get_pairs()
-    print(pairs)
+    ohlc = client.get_ohlc('XETHZEUR', 60, 1499000000)  # UTC 2017-07-02 12:53:20
+    print(ohlc.size)
+    # pairs = client.get_pairs()
+    # print(pairs)
