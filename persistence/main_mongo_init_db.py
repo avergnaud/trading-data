@@ -1,5 +1,5 @@
 # import the PyMongo MongoClient class
-from pymongo import MongoClient, ASCENDING
+from pymongo import ASCENDING
 from mongo_constants import get_exchanges_collection, get_pairs_collection, get_ohlc_collection, \
     get_ohlc_definition_collection, get_intervals_collection, BINANCE, KRAKEN, FTX, GATE
 from input.binance_exchange.binance_client import BinanceClient
@@ -12,7 +12,7 @@ from input.gate_exchange.gate_client import GateClient
 #
 
 
-# exchagnes
+# exchanges
 exchanges = get_exchanges_collection()
 if exchanges.find_one({'exchange': BINANCE}) is None:
     exchanges.insert_one({'exchange': BINANCE})
