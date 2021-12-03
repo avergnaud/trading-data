@@ -10,3 +10,4 @@ schedule
 ftx
 requests
 gate_api
+python-kucoin
