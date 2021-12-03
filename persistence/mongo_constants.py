@@ -60,6 +60,7 @@ BINANCE = 'binance'
 KRAKEN = 'kraken'
 FTX = 'ftx'
 GATE = 'gate'
+KUCOIN = 'kucoin'
 
 def get_db():
     return db

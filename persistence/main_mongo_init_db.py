@@ -1,11 +1,13 @@
 # import the PyMongo MongoClient class
 from pymongo import ASCENDING
+
 from mongo_constants import get_exchanges_collection, get_pairs_collection, get_ohlc_collection, \
-    get_ohlc_definition_collection, get_intervals_collection, BINANCE, KRAKEN, FTX, GATE
+    get_ohlc_definition_collection, get_intervals_collection, BINANCE, KRAKEN, FTX, GATE, KUCOIN
 from input.binance_exchange.binance_client import BinanceClient
 from input.kraken_exchange.kraken_client import KrakenClient
 from input.ftx_exchange.ftx_client import FtxClient
 from input.gate_exchange.gate_client import GateClient
+from input.kucoin_exchange.kucoin_client import KucoinClient
 
 #
 # idempotent
@@ -22,6 +24,8 @@ if exchanges.find_one({'exchange': FTX}) is None:
     exchanges.insert_one({'exchange': FTX})
 if exchanges.find_one({'exchange': GATE}) is None:
     exchanges.insert_one({'exchange': GATE})
+if exchanges.find_one({'exchange': KUCOIN}) is None:
+    exchanges.insert_one({'exchange': KUCOIN})
 
 # pairs
 pairs = get_pairs_collection()
@@ -49,6 +53,12 @@ gate_pairs = gateClient.get_pairs()
 for gate_pair in gate_pairs:
     if pairs.find_one({'exchange': GATE, 'pair': gate_pair}) is None:
         pairs.insert_one({'exchange': GATE, 'pair': gate_pair})
+# KuCoin
+kucoinClient = KucoinClient()
+kucoin_pairs = kucoinClient.get_pairs()
+for kucoin_pair in kucoin_pairs:
+    if pairs.find_one({'exchange': KUCOIN, 'pair': kucoin_pair['symbol']}) is None:
+        pairs.insert_one({'exchange': KUCOIN, 'pair': kucoin_pair['symbol']})
 
 # intervals
 intervals = get_intervals_collection()
@@ -78,6 +88,12 @@ gate_intervals = ['10s', '1m', '5m', '15m', '30m', '1h', '4h', '8h', '1d', '1w',
 for gate_interval in gate_intervals:
     if intervals.find_one({'exchange': GATE, 'interval': gate_interval}) is None:
         intervals.insert_one({'exchange': GATE, 'interval': gate_interval})
+# Kucoin
+kucoin_intervals = ['1min', '3min', '5min', '15min', '30min', '1hour', '2hour', '4hour', '6hour', '8hour', '12hour', '1day', '1week']
+for kucoin_interval in kucoin_intervals:
+    if intervals.find_one({'exchange': KUCOIN, 'interval': kucoin_interval}) is None:
+        intervals.insert_one({'exchange': KUCOIN, 'interval': kucoin_interval})
+
 # ohlc_definition
 ohlc_definition = get_ohlc_definition_collection()
 
