@@ -21,7 +21,7 @@ net start|stop MongoDB
 
 ## init
 '''
-mongo_init_db.py
+main_mongo_init_db.py
 '''
 
 ## run
