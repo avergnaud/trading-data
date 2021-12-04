@@ -1,9 +1,12 @@
 import threading
 import time
-
 import schedule
-
+from persistence import mongo_constants
 from input.binance_exchange.binance_feed import BinanceFeed
+from input.ftx_exchange.ftx_feed import FtxFeed
+from input.gate_exchange.gate_feed import GateFeed
+from input.kraken_exchange.kraken_feed import KrakenFeed
+from input.kucoin_exchange.kucoin_feed import KucoinFeed
 
 
 def run_continuously(interval=1):
@@ -61,8 +64,16 @@ class FeedCronManager:
     # helper method
     def get_feed_by_ohlc_definition(self, ohlc_definition):
         match ohlc_definition['exchange']:
-            case 'binance':
+            case mongo_constants.BINANCE:
                 return BinanceFeed(ohlc_definition['pair'], ohlc_definition['interval'])
+            case mongo_constants.FTX:
+                return FtxFeed(ohlc_definition['pair'], ohlc_definition['interval'])
+            case mongo_constants.GATE:
+                return GateFeed(ohlc_definition['pair'], ohlc_definition['interval'])
+            case mongo_constants.KRAKEN:
+                return KrakenFeed(ohlc_definition['pair'], ohlc_definition['interval'])
+            case mongo_constants.KUCOIN:
+                return KucoinFeed(ohlc_definition['pair'], ohlc_definition['interval'])
             case _:
                 # Anything not matched by the above
                 print(f"No feeder found for {ohlc_definition}")

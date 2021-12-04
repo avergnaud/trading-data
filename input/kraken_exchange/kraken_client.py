@@ -46,7 +46,7 @@ class KrakenClient:
         del df['count']
 
         df = df.set_index(df['timestamp'])
-        df.index = pd.to_datetime(df.index, unit='ms')
+        df.index = pd.to_datetime(df.index, unit='s')
         del df['timestamp']
         return df.copy()
 

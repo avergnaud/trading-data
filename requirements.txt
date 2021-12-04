@@ -9,5 +9,5 @@ krakenex
 schedule
 ftx
 requests
-gate_api
+gate-api
 python-kucoin
