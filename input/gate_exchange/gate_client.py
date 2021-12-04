@@ -14,7 +14,7 @@ api_instance = gate_api.SpotApi(api_client)
 
 class GateClient:
     def __init__(self):
-        print('constructing GateClient')
+        pass
 
     # helper
     def convert_to_seconds(self, interval):

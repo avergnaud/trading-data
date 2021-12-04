@@ -9,7 +9,7 @@ api_passphrase = '<api_passphrase>'
 class KucoinClient:
 
     def __init__(self):
-        print('constructing KucoinClient')
+        pass
 
     def get_ohlc(self, pair, interval, start):
         """Calls the  Kucoin API, transforms some data, return the klines data

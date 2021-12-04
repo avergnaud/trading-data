@@ -6,7 +6,6 @@ EXCHANGE = 'kucoin'
 
 class KucoinFeed:
     def __init__(self, pair, interval):
-        print('constructing KucoinFeed')
         self.exchange = EXCHANGE
         self.pair = pair
         self.interval = interval

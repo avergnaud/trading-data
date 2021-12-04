@@ -14,7 +14,6 @@ api_secret = os.getenv('FTX_API_SECRET')
 
 class FtxClient:
     def __init__(self):
-        print('constructing FTXClient')
         self.x = ftx.FtxClient()
 
     def get_pairs(self):

@@ -53,7 +53,6 @@ class FeedCronManager:
     @staticmethod
     def get_instance():
         if FeedCronManager.__instance is None:
-            print("Création du FeedCronManager")
             FeedCronManager.__instance = FeedCronManager()
         return FeedCronManager.__instance
 

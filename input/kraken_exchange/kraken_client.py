@@ -4,7 +4,6 @@ import pandas as pd
 
 class KrakenClient:
     def __init__(self):
-        print('constructing KrakenClient')
         self.k = krakenex.API()
 
     def get_ohlc(self, pair, interval, since):

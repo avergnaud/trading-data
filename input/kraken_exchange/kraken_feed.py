@@ -6,7 +6,6 @@ EXCHANGE = 'kraken'
 
 class KrakenFeed:
     def __init__(self, pair, interval):
-        print('constructing BinanceFeed')
         self.exchange = EXCHANGE
         self.pair = pair
         self.interval = interval

@@ -1,19 +1,28 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-
+import time
+from threading import Thread
 from cron.feed_cron_manager import FeedCronManager
 from persistence import exchanges_dao, pairs_dao, intervales_dao, ohlc_definition_dao
+
 
 app = Flask(__name__)
 CORS(app)
 
 
+def threaded_function():
+    ohlc_defs = ohlc_definition_dao.get_all()
+    for ohlc_definition in ohlc_defs:
+        # pour répartir les appels aux API
+        time.sleep(5)
+        FeedCronManager.get_instance().add_cron(ohlc_definition)
+
+
 @app.before_first_request
 def before_first_request_func():
     print("Relaunching crons on startup !")
-    ohlc_defs = ohlc_definition_dao.get_all()
-    for ohlc_definition in ohlc_defs:
-        FeedCronManager.get_instance().add_cron(ohlc_definition)
+    thread = Thread(target=threaded_function)
+    thread.start()
 
 
 @app.route("/")
@@ -61,7 +70,8 @@ def ohlc_definitions():
 if __name__ == "__main__":
     print('RUNNING!')
     try:
-        app.run(debug=True, host="0.0.0.0")
+        # app.run(debug=True, host="0.0.0.0")
+        app.run(host="0.0.0.0")
     finally:
         # your "destruction" code
         print('Can you hear me?')
