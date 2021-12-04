@@ -64,18 +64,17 @@ class GateClient:
         return df
 
     def get_ohlc(self, pair, interval, since):
-        """Calls the Kraken API...
+        """Calls the Gate API...
+        pair : str
+                trading pair. Example: "ETHUSDT"
+            interval : str.
+                One of GateIO interval
+                 ('10s', '1m') '5m', '15m', '30m', '1h', '4h', '8h', '1d', '1w', '1M'
+            start : (str|int)
+                Start date string in UTC format or timestamp in seconds
+                Example : 1606939487 = 2 December 2020 20:04:47
 
-    pair : str
-            trading pair. Example: "ETHUSDT"
-        interval : str.
-            One of GateIO interval
-             ('10s', '1m') '5m', '15m', '30m', '1h', '4h', '8h', '1d', '1w', '1M'
-        start : (str|int)
-            Start date string in UTC format or timestamp in seconds
-            Example : 1606939487 = 2 December 2020 20:04:47
-
-    Returns
+        Returns
         -------
         pandas.core.frame.DataFrame
             a panda DataFrame containing timestamp (index), open, high, low, close, volume

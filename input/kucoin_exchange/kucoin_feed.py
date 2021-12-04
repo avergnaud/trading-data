@@ -17,7 +17,7 @@ class KucoinFeed:
             {'exchange': self.exchange, 'pair': self.pair, 'interval': self.interval})
         if start_ohlc is None:
             # 1502928000000 = 17 August 2017 00:00:00
-            start = 1502928000000
+            start = 1502928000
         else:
             start = start_ohlc['timestamp']
 
@@ -35,5 +35,5 @@ class KucoinFeed:
 
 
 if __name__ == "__main__":
-    kucoinFeed = KucoinFeed('BTC-USDT', '5min')
+    kucoinFeed = KucoinFeed('ETH-USDT', '1day')
     kucoinFeed.update_data()

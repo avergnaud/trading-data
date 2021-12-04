@@ -1,8 +1,8 @@
 from persistence.mongo_constants import get_intervals_collection
 
 # db: trading_data
-# collection: pairs
-# fields: exchange pair
+# collection: intervals
+# fields: exchange interval allowed
 
 intervales_collection = get_intervals_collection()
 

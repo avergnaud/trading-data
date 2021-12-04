@@ -63,36 +63,55 @@ for kucoin_pair in kucoin_pairs:
 # intervals
 intervals = get_intervals_collection()
 # Binance
-binance_intervals = ['1m', '3m', '5m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w', '1M']
-for binance_interval in binance_intervals:
+binance_disabled_intervals = ['1m', '3m', '5m', '15m']
+binance_allowed_intervals = ['30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w', '1M']
+for binance_interval in binance_disabled_intervals:
     if intervals.find_one({'exchange': BINANCE, 'interval': binance_interval}) is None:
-        intervals.insert_one({'exchange': BINANCE, 'interval': binance_interval})
+        intervals.insert_one({'exchange': BINANCE, 'interval': binance_interval, 'allowed': False})
+for binance_interval in binance_allowed_intervals:
+    if intervals.find_one({'exchange': BINANCE, 'interval': binance_interval}) is None:
+        intervals.insert_one({'exchange': BINANCE, 'interval': binance_interval, 'allowed': True})
 # Kraken
-kraken_intervals = [1, 5, 15, 30, 60, 240, 1440, 10080, 21600]
-for kraken_interval in kraken_intervals:
+kraken_disabled_intervals = [1, 5, 15]
+kraken_allowed_intervals = [30, 60, 240, 1440, 10080, 21600]
+for kraken_interval in kraken_disabled_intervals:
     if intervals.find_one({'exchange': KRAKEN, 'interval': kraken_interval}) is None:
-        intervals.insert_one({'exchange': KRAKEN, 'interval': kraken_interval})
-kraken_intervals = [1, 5, 15, 30, 60, 240, 1440, 10080, 21600]
+        intervals.insert_one({'exchange': KRAKEN, 'interval': kraken_interval, 'allowed': False})
+for kraken_interval in kraken_allowed_intervals:
+    if intervals.find_one({'exchange': KRAKEN, 'interval': kraken_interval}) is None:
+        intervals.insert_one({'exchange': KRAKEN, 'interval': kraken_interval, 'allowed': True})
 # FTX
 # "resolution: window length in seconds. options: 15, 60, 300, 900, 3600, 14400, 86400,
 # or any multiple of 86400 up to 30*86400" (86400 = 1 jour)
+ftx_disabled_intervals = [15, 60, 300, 900]
 trentaine = [i for i in range(1, 30)]
 multiples = [number * 86400 for number in trentaine]
-ftx_intervals = [15, 60, 300, 900, 3600, 14400]
-ftx_intervals.extend(multiples)
-for ftx_interval in ftx_intervals:
+ftx_allowed_intervals = [3600, 14400]
+ftx_allowed_intervals.extend(multiples)
+for ftx_interval in ftx_disabled_intervals:
     if intervals.find_one({'exchange': FTX, 'interval': ftx_interval}) is None:
-        intervals.insert_one({'exchange': FTX, 'interval': ftx_interval})
+        intervals.insert_one({'exchange': FTX, 'interval': ftx_interval, 'allowed': False})
+for ftx_interval in ftx_allowed_intervals:
+    if intervals.find_one({'exchange': FTX, 'interval': ftx_interval}) is None:
+        intervals.insert_one({'exchange': FTX, 'interval': ftx_interval, 'allowed': True})
 # Gate
-gate_intervals = ['10s', '1m', '5m', '15m', '30m', '1h', '4h', '8h', '1d', '1w', '1M']
-for gate_interval in gate_intervals:
+gate_disabled_intervals = ['10s', '1m', '5m', '15m']
+gate_allowed_intervals = ['30m', '1h', '4h', '8h', '1d', '1w', '1M']
+for gate_interval in gate_disabled_intervals:
     if intervals.find_one({'exchange': GATE, 'interval': gate_interval}) is None:
-        intervals.insert_one({'exchange': GATE, 'interval': gate_interval})
+        intervals.insert_one({'exchange': GATE, 'interval': gate_interval, 'allowed': False})
+for gate_interval in gate_allowed_intervals:
+    if intervals.find_one({'exchange': GATE, 'interval': gate_interval}) is None:
+        intervals.insert_one({'exchange': GATE, 'interval': gate_interval, 'allowed': True})
 # Kucoin
-kucoin_intervals = ['1min', '3min', '5min', '15min', '30min', '1hour', '2hour', '4hour', '6hour', '8hour', '12hour', '1day', '1week']
-for kucoin_interval in kucoin_intervals:
+kucoin_disabled_intervals = ['1min', '3min', '5min','15min']
+kucoin_allowed_intervals = ['30min', '1hour', '2hour', '4hour', '6hour', '8hour', '12hour', '1day', '1week']
+for kucoin_interval in kucoin_disabled_intervals:
     if intervals.find_one({'exchange': KUCOIN, 'interval': kucoin_interval}) is None:
-        intervals.insert_one({'exchange': KUCOIN, 'interval': kucoin_interval})
+        intervals.insert_one({'exchange': KUCOIN, 'interval': kucoin_interval, 'allowed': False})
+for kucoin_interval in kucoin_allowed_intervals:
+    if intervals.find_one({'exchange': KUCOIN, 'interval': kucoin_interval}) is None:
+        intervals.insert_one({'exchange': KUCOIN, 'interval': kucoin_interval, 'allowed': True})
 
 # ohlc_definition
 ohlc_definition = get_ohlc_definition_collection()

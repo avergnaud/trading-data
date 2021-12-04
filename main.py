@@ -13,8 +13,8 @@ CORS(app)
 def threaded_function():
     ohlc_defs = ohlc_definition_dao.get_all()
     for ohlc_definition in ohlc_defs:
-        # pour répartir les appels aux API
-        time.sleep(5)
+        # pour répartir les appels aux API, on attend 2 minutes entre chaque add_cron
+        time.sleep(120)
         FeedCronManager.get_instance().add_cron(ohlc_definition)
 
 
