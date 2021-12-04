@@ -73,7 +73,7 @@ class FtxClient:
         # limit – optional with a 5000 limit
         # ce premier appel a toujours lieu :
         now_seconds = int(datetime.now().timestamp())
-        interval_seconds = interval
+        interval_seconds = int(interval)
         from_seconds = since
         # est-ce qu'il y a plus de 1000 périodes ?
         to_seconds = min(now_seconds, from_seconds + 4999 * interval_seconds)
