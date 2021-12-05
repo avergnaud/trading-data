@@ -65,7 +65,6 @@ class BinanceClient:
         del df['timestamp']
         return df.copy()
 
-
     def get_pairs(self):
         """Calls the Binance API, gets available trading pairs
 

@@ -11,8 +11,8 @@ class KucoinFeed:
         self.interval = interval
 
     def update_data(self):
-        print(f"running KucoinFeed update_data for {self.pair}, {self.interval}")
-
+        print(f"KucoinFeed | {self.pair}, {self.interval} | updating")
+        # computing start timestamp
         start_ohlc = ohlc_dao.get_last_timestamp(
             {'exchange': self.exchange, 'pair': self.pair, 'interval': self.interval})
         if start_ohlc is None:
@@ -20,10 +20,9 @@ class KucoinFeed:
             start = 1502928000
         else:
             start = start_ohlc['timestamp']
-
+        # updating data
         kucoinClient = KucoinClient()
         ohlc_dataframe = kucoinClient.get_ohlc(self.pair, self.interval, start)
-
         # peu performant uniquement pour les premiers insert, en cas nominal start est récent:
         for ind in ohlc_dataframe.index:
             ohlc = {'exchange': self.exchange, 'pair': self.pair, 'interval': self.interval,
@@ -32,8 +31,9 @@ class KucoinFeed:
                     'low': ohlc_dataframe['low'][ind], 'close': ohlc_dataframe['close'][ind],
                     'volume': ohlc_dataframe['volume'][ind]}
             ohlc_dao.insert_or_update(ohlc)
+        print(f"KucoinFeed | {self.pair}, {self.interval} | done")
 
 
 if __name__ == "__main__":
-    kucoinFeed = KucoinFeed('ETH-USDT', '1day')
+    kucoinFeed = KucoinFeed('ETH-USDT', '1hour')
     kucoinFeed.update_data()

@@ -13,8 +13,8 @@ class FtxFeed:
         self.interval = interval
 
     def update_data(self):
-        print(f"running GateFeed update_data for {self.pair}, {self.interval}")
-
+        print(f"FtxFeed | {self.pair}, {self.interval} | updating")
+        # computing start timestamp
         start_ohlc = ohlc_dao.get_last_timestamp(
             {'exchange': self.exchange, 'pair': self.pair, 'interval': self.interval})
         if start_ohlc is None:
@@ -22,10 +22,9 @@ class FtxFeed:
             start = 1606939487
         else:
             start = start_ohlc['timestamp']
-
+        # updating data
         ftxClient = FtxClient()
         ohlc_dataframe = ftxClient.get_ohlc(self.pair, self.interval, start)
-
         # peu performant uniquement pour les premiers insert, en cas nominal start est récent:
         for ind in ohlc_dataframe.index:
             ohlc = {'exchange': self.exchange, 'pair': self.pair, 'interval': self.interval,
@@ -34,6 +33,7 @@ class FtxFeed:
                     'low': ohlc_dataframe['low'][ind], 'close': ohlc_dataframe['close'][ind],
                     'volume': ohlc_dataframe['volume'][ind]}
             ohlc_dao.insert_or_update(ohlc)
+        print(f"FtxFeed | {self.pair}, {self.interval} | done")
 
     def __hash__(self):
         return hash((self.pair, self.interval))
@@ -48,5 +48,5 @@ class FtxFeed:
 
 
 if __name__ == "__main__":
-    ftxFeed = FtxFeed('BTC/USDT', 60)
+    ftxFeed = FtxFeed('ETH/USDT', 3600)
     ftxFeed.update_data()

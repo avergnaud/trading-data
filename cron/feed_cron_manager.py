@@ -1,6 +1,7 @@
 import threading
 import time
 import schedule
+from threading import Thread
 from persistence import mongo_constants
 from input.binance_exchange.binance_feed import BinanceFeed
 from input.ftx_exchange.ftx_feed import FtxFeed
@@ -57,7 +58,6 @@ class FeedCronManager:
         return FeedCronManager.__instance
 
     def background_job(self, feed):
-        print(f"Running {feed.exchange} {feed.pair} {feed.interval}")
         feed.update_data()
 
     # helper method
@@ -82,6 +82,10 @@ class FeedCronManager:
         print(f"add_cron({ohlc_definition})")
         feed = self.get_feed_by_ohlc_definition(ohlc_definition)
         if feed not in self.feeders:
+            # runs immediately (in a separate thread):
+            thread = Thread(target=self.background_job, args=[feed])
+            thread.start()
+            # then runs on schedule (in another thread):
             job = schedule.every(int(ohlc_definition['update_rate'])).minutes.do(self.background_job, feed)
             self.feeders[feed] = job
 
