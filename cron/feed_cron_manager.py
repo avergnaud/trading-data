@@ -58,7 +58,10 @@ class FeedCronManager:
         return FeedCronManager.__instance
 
     def background_job(self, feed):
-        feed.update_data()
+        try:
+            feed.update_data()
+        except Exception as e:
+            print(e)
 
     # helper method
     def get_feed_by_ohlc_definition(self, ohlc_definition):

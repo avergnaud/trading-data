@@ -1,0 +1,49 @@
+GateFeed | ETH_USDT, 1h | done
+Running kucoin ETH-USDT 1hour
+KucoinFeed | ETH-USDT, 1hour | updating
+Exception in thread Thread-8:
+Traceback (most recent call last):
+  File "C:\Users\a.vergnaud\AppData\Local\Programs\Python\Python310\lib\threading.py", line 1009, in _bootstrap_inner
+    self.run()
+  File "C:\Users\a.vergnaud\dev\_crypto\trading-data\cron\feed_cron_manager.py", line 30, in run
+    schedule.run_pending()
+  File "C:\Users\a.vergnaud\AppData\Local\Programs\Python\Python310\lib\site-packages\schedule\__init__.py", line 780, in run_pending
+    default_scheduler.run_pending()
+  File "C:\Users\a.vergnaud\AppData\Local\Programs\Python\Python310\lib\site-packages\schedule\__init__.py", line 100, in run_pending
+    self._run_job(job)
+  File "C:\Users\a.vergnaud\AppData\Local\Programs\Python\Python310\lib\site-packages\schedule\__init__.py", line 172, in _run_job
+    ret = job.run()
+  File "C:\Users\a.vergnaud\AppData\Local\Programs\Python\Python310\lib\site-packages\schedule\__init__.py", line 661, in run
+    ret = self.job_func()
+  File "C:\Users\a.vergnaud\dev\_crypto\trading-data\cron\feed_cron_manager.py", line 62, in background_job
+    
+  File "C:\Users\a.vergnaud\dev\_crypto\trading-data\input\kucoin_exchange\kucoin_feed.py", line 33, in update_data
+    ohlc_dao.insert_or_update(ohlc)
+  File "C:\Users\a.vergnaud\dev\_crypto\trading-data\persistence\ohlc_dao.py", line 26, in insert_or_update
+    ohlc_collection.replace_one(
+  File "C:\Users\a.vergnaud\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\collection.py", line 952, in replace_one
+    self._update_retryable(
+  File "C:\Users\a.vergnaud\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\collection.py", line 877, in _update_retryable
+    return self.__database.client._retryable_write(
+  File "C:\Users\a.vergnaud\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 1552, in _retryable_write
+    return self._retry_with_session(retryable, func, s, None)
+  File "C:\Users\a.vergnaud\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 1438, in _retry_with_session
+    return self._retry_internal(retryable, func, session, bulk)
+  File "C:\Users\a.vergnaud\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\mongo_client.py", line 1470, in _retry_internal
+    return func(session, sock_info, retryable)
+  File "C:\Users\a.vergnaud\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\collection.py", line 869, in _update
+    return self._update(
+  File "C:\Users\a.vergnaud\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\collection.py", line 838, in _update
+    result = sock_info.command(
+  File "C:\Users\a.vergnaud\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\pool.py", line 726, in command
+    self._raise_connection_failure(error)
+  File "C:\Users\a.vergnaud\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\pool.py", line 710, in command
+    return command(self, dbname, spec, secondary_ok,
+  File "C:\Users\a.vergnaud\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\network.py", line 121, in command
+    request_id, msg, size, max_doc_size = message._op_msg(
+  File "C:\Users\a.vergnaud\AppData\Local\Programs\Python\Python310\lib\site-packages\pymongo\message.py", line 743, in _op_msg
+    return _op_msg_uncompressed(
+bson.errors.InvalidDocument: cannot encode object: 4055, of type: <class 'numpy.int64'>
+127.0.0.1 - - [05/Dec/2021 13:55:37] "GET /exchanges HTTP/1.1" 200 -
+127.0.0.1 - - [05/Dec/2021 13:55:37] "GET /exchanges/binance/intervals HTTP/1.1" 200 -
+127.0.0.1 - - [05/Dec/2021 13:55:37] "GET /exchanges/binance/pairs HTTP/1.1" 200 -

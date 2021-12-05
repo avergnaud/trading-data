@@ -38,7 +38,7 @@ def insert_or_update(ohlc):
 
 # READ
 def get_last_timestamp(ohlc):
-    """inserts or updates a single ohlc document
+    """retrieves last ohlc sorting by timestamp desc
 
     Parameters
     ----------
@@ -48,9 +48,34 @@ def get_last_timestamp(ohlc):
     -------
     void
     """
-    result = ohlc_collection.find({'exchange': ohlc['exchange'], 'pair': ohlc['pair'], 'interval': ohlc['interval']}).sort([('timestamp', DESCENDING)]).limit(1)
+    result = ohlc_collection.find(
+        {'exchange': ohlc['exchange'], 'pair': ohlc['pair'], 'interval': ohlc['interval']}).sort(
+        [('timestamp', DESCENDING)]).limit(1)
     for r in result:
         return r
+
+
+def get_all(ohlc_definition):
+    """gets all ohlc fitting definition
+
+    Parameters
+    ----------
+    ohlc_definition : {exchange pair interval}
+
+    Returns
+    -------
+    list
+    """
+    ohlcs = []
+    result = ohlc_collection.find(
+        {'exchange': ohlc_definition['exchange'], 'pair': ohlc_definition['pair'],
+         'interval': ohlc_definition['interval']}).sort(
+        [('timestamp', DESCENDING)])
+    for ohlc in result:
+        ohlc['_id'] = str(ohlc['_id'])
+        ohlcs.append(ohlc)
+    return ohlcs
+
 
 # UPDATE
 
@@ -77,5 +102,5 @@ if __name__ == "__main__":
              'open': 1002.1234567,
              'high': 2002.2345678, 'low': 504.3456789, 'close': 1751, 'volume': 4000}
     insert_or_update(ohlc5)
-    result = get_last_timestamp({ 'exchange': 'binance', 'pair': 'ETHEUR', 'interval': '1h' })
+    result = get_last_timestamp({'exchange': 'binance', 'pair': 'ETHEUR', 'interval': '1h'})
     print(result)

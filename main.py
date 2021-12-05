@@ -3,7 +3,7 @@ from flask_cors import CORS
 import time
 from threading import Thread
 from cron.feed_cron_manager import FeedCronManager
-from persistence import exchanges_dao, pairs_dao, intervales_dao, ohlc_definition_dao
+from persistence import exchanges_dao, pairs_dao, intervales_dao, ohlc_definition_dao, ohlc_dao
 
 
 app = Flask(__name__)
@@ -65,6 +65,17 @@ def ohlc_definitions():
     else:
         liste = ohlc_definition_dao.get_all()
         return jsonify(liste)
+
+
+# /exchanges/:exchange_name/intervals
+@app.route("/ohlcs/<exchange>/<pair>/<interval>")
+def get_all_ohlc(exchange, pair, interval):
+    liste = ohlc_dao.get_all({
+        'exchange': exchange,
+        'pair': pair,
+        'interval': interval
+    })
+    return jsonify(liste)
 
 
 if __name__ == "__main__":
