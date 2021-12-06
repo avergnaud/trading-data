@@ -2,7 +2,7 @@ from persistence.mongo_constants import get_intervals_collection
 
 # db: trading_data
 # collection: intervals
-# fields: exchange interval allowed
+# fields: exchange interval interval_std allowed
 
 intervales_collection = get_intervals_collection()
 
