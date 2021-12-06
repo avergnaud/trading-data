@@ -3,6 +3,7 @@ from math import floor
 import pandas as pd
 import ta
 
+from input.binance_exchange.binance_client import BinanceClient
 from input.ftx_exchange.ftx_client import FtxClient
 
 
@@ -45,7 +46,7 @@ class FtxBot:
         wallet = 1000
         lastAth = 0
         lastIndex = ohlc.first_valid_index()
-        fee = 0.0007
+        fee = 0.00063
 
         for index, row in ohlc.iterrows():
             # Buy
@@ -141,8 +142,10 @@ class FtxBot:
 
 
 if __name__ == "__main__":
-    ftxclient = FtxClient()
-    ohlcs = ftxclient.get_ohlc('ETH/USDT', 3600, 1483228817)
+    # ftxclient = FtxClient()
+    # ohlcs = ftxclient.get_ohlc('ETH/USDT', 3600, 1483228817)
+    bclient = BinanceClient()
+    ohlcs = bclient.get_ohlc('ETHUSDT', '1h', 1483228817000)
     # print(ohlcs.size)
     bibot = FtxBot()
     bibot.launchBot2(ohlcs)
