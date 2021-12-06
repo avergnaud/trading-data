@@ -77,6 +77,31 @@ def get_all(ohlc_definition):
     return ohlcs
 
 
+def get_last(ohlc_definition, last):
+    """gets last ohlc fitting definition
+
+    Parameters
+    ----------
+    ohlc_definition : {exchange pair interval}
+    last : last n ohlcs
+
+    Returns
+    -------
+    list
+    """
+    ohlcs = []
+    result = ohlc_collection.find(
+        {'exchange': ohlc_definition['exchange'], 'pair': ohlc_definition['pair'],
+         'interval': ohlc_definition['interval']}) \
+        .sort(
+        [('timestamp', DESCENDING)]
+    ).limit(last)
+    for ohlc in result:
+        ohlc['_id'] = str(ohlc['_id'])
+        ohlcs.append(ohlc)
+    return ohlcs
+
+
 # UPDATE
 
 # DELETE

@@ -14,7 +14,7 @@ def threaded_function():
     ohlc_defs = ohlc_definition_dao.get_all()
     for ohlc_definition in ohlc_defs:
         # pour répartir les appels aux API, on attend 2 minutes entre chaque add_cron
-        time.sleep(120)
+        time.sleep(60)
         FeedCronManager.get_instance().add_cron(ohlc_definition)
 
 
@@ -70,18 +70,28 @@ def ohlc_definitions():
 # /exchanges/:exchange_name/intervals
 @app.route("/ohlcs/<exchange>/<pair>/<interval>")
 def get_all_ohlc(exchange, pair, interval):
-    liste = ohlc_dao.get_all({
-        'exchange': exchange,
-        'pair': pair,
-        'interval': interval
-    })
-    return jsonify(liste)
+    last = request.args.get('last')
+    if last is not None:
+        liste = ohlc_dao.get_last({
+            'exchange': exchange,
+            'pair': pair,
+            'interval': interval
+        }, int(last))
+        return jsonify(liste)
+    else:
+        liste = ohlc_dao.get_all({
+            'exchange': exchange,
+            'pair': pair,
+            'interval': interval
+        })
+        return jsonify(liste)
 
 
 if __name__ == "__main__":
     try:
         # app.run(debug=True, host="0.0.0.0")
-        app.run(host="0.0.0.0")
+        # app.run(host="0.0.0.0")
+        app.run()
     finally:
         # your "destruction" code
         print('Can you hear me?')

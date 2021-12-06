@@ -94,6 +94,7 @@ if __name__ == "__main__":
     # pairs = client.get_pairs()
     # print(pairs)
     # ohlcs = client.get_ohlc('ETH/USDT', 3600, 1606939487)  # Wed Dec 02 2020 20:04:47 GMT+0000
-    ohlcs = client.get_ohlc('ETH/USDT', 300, 1606939487)  # Wed Dec 02 2020 20:04:47 GMT+0000
+    # ohlcs = client.get_ohlc('ETH/USDT', 300, 1606939487)  # Wed Dec 02 2020 20:04:47 GMT+0000
+    ohlcs = client.get_ohlc('ETH/USDT', 300, 1502928000)  # Wed Dec 02 2020 20:04:47 GMT+0000
     print(ohlcs)
     print(ohlcs.size)
