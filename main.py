@@ -1,10 +1,13 @@
-from flask import Flask, jsonify, request
-from flask_cors import CORS
 import time
 from threading import Thread
-from cron.feed_cron_manager import FeedCronManager
-from persistence import exchanges_dao, pairs_dao, intervales_dao, ohlc_definition_dao, ohlc_dao
 
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+
+from bot.param_opti import ParamOpti
+from cron.feed_cron_manager import FeedCronManager
+from input.binance_exchange.binance_client import BinanceClient
+from persistence import exchanges_dao, pairs_dao, intervales_dao, ohlc_definition_dao, ohlc_dao
 
 app = Flask(__name__)
 CORS(app)
@@ -85,6 +88,18 @@ def get_all_ohlc(exchange, pair, interval):
             'interval': interval
         })
         return jsonify(liste)
+
+
+# /optimisations
+@app.route("/optimisations")
+def get_optimisation():
+    bclient = BinanceClient()
+    # 01 janvier 2021
+    ohlcs = bclient.get_ohlc('ETHUSDT', '1h', 1609489364)
+    # print(ohlcs.size)
+    param_opti = ParamOpti()
+    dt = param_opti.launchOptimization(ohlcs)
+    return jsonify(dt)
 
 
 if __name__ == "__main__":
