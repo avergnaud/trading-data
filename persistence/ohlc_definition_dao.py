@@ -3,7 +3,7 @@ from bson.objectid import ObjectId
 
 # db: trading_data
 # collection: ohlc_definition
-# fields: exchange pair interval update_rate
+# fields: exchange pair interval interval_std update_rate
 # uniqueness: exchange pair interval
 
 ohlc_definition_collection = get_ohlc_definition_collection()

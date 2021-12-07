@@ -1,3 +1,12 @@
+
+
+add_cron({'_id': '61afb30a3b1e51b0ab8a55b3', 'exchange': 'gate', 'pair': 'IHT_ETH', 'interval': '8h', 'interval_std': None, 'update_rate': 20})
+GateFeed | IHT_ETH, 8h | updating
+cannot encode object: 0, of type: <class 'numpy.int64'>
+
+
+
+
 GateFeed | ETH_USDT, 1h | done
 Running kucoin ETH-USDT 1hour
 KucoinFeed | ETH-USDT, 1hour | updating
