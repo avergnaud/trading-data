@@ -4,7 +4,6 @@ import pandas as pd
 import ta
 
 from input.binance_exchange.binance_client import BinanceClient
-from input.ftx_exchange.ftx_client import FtxClient
 
 
 class FtxBot:
@@ -28,7 +27,7 @@ class FtxBot:
         r = floor(float(n) * 10 ** decimals) / 10 ** decimals
         return str(r)
 
-    def launchBot2(self, ohlc):
+    def launchbotEMARSI(self, ohlc):
 
         accountName = ''
         pairSymbol = 'ETH/USD'
@@ -58,7 +57,7 @@ class FtxBot:
                 wallet = coin * row['close']
                 if wallet > lastAth:
                     lastAth = wallet
-                # print("Buy COIN at",df['close'][index],'$ the', index)
+                print("Buy COIN at", ohlc['close'][index], '$ the', index)
                 myrow = {'date': index, 'position': "Buy", 'price': row['close'], 'frais': frais, 'fiat': usdt,
                          'coins': coin, 'wallet': wallet, 'drawBack': (wallet - lastAth) / lastAth}
                 ohlc = ohlc.append(myrow, ignore_index=True)
@@ -72,7 +71,7 @@ class FtxBot:
                 wallet = usdt
                 if wallet > lastAth:
                     lastAth = wallet
-                # print("Sell COIN at",df['close'][index],'$ the', index)
+                print("Sell COIN at", ohlc['close'][index], '$ the', index)
                 myrow = {'date': index, 'position': "Sell", 'price': row['close'], 'frais': frais, 'fiat': usdt,
                          'coins': coin, 'wallet': wallet, 'drawBack': (wallet - lastAth) / lastAth}
                 ohlc = ohlc.append(myrow, ignore_index=True)
@@ -96,7 +95,7 @@ class FtxBot:
         # fiatAmount = getBalance(client, fiatSymbol)
         # cryptoAmount = getBalance(client, cryptoSymbol)
         # actualPrice = ohlc['close'].iloc[-1]
-
+        last_index = ohlc.first_valid_index()
         for index, row in ohlc.iterrows():
             actualPrice = ohlc['close'][last_index]
             minToken = 5 / actualPrice
@@ -148,4 +147,4 @@ if __name__ == "__main__":
     ohlcs = bclient.get_ohlc('ETHUSDT', '1h', 1483228817000)
     # print(ohlcs.size)
     bibot = FtxBot()
-    bibot.launchBot2(ohlcs)
+    bibot.launchbotEMARSI(ohlcs)

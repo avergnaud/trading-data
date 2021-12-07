@@ -7,10 +7,9 @@ class BinanceBot:
     def __init__(self):
         pass
 
-    def launchBot(self, ohlc):
+    def launchBotSMA(self, ohlc):
         ohlc['SMA200'] = ta.trend.sma_indicator(ohlc['close'], 200)
         ohlc['SMA600'] = ta.trend.sma_indicator(ohlc['close'], 600)
-        print(ohlc)
 
         usdt = 500
         btc = 0
@@ -32,7 +31,7 @@ class BinanceBot:
 
         final_result = usdt + btc * ohlc['close'].iloc[-1]
         print("Final result", final_result, 'USDT')
-        print("Buy and hold result", (1000 / ohlc['close'].iloc[0]) * ohlc['close'].iloc[-1], 'USDT')
+        # print("Buy and hold result", (1000 / ohlc['close'].iloc[0]) * ohlc['close'].iloc[-1], 'USDT')
 
 
 if __name__ == "__main__":
@@ -40,4 +39,4 @@ if __name__ == "__main__":
     ohlc = bclient.get_ohlc('BTCUSDT', '1h', 1606939487)
     print(ohlc.size)
     bibot = BinanceBot()
-    bibot.launchBot(ohlc)
+    bibot.launchBotSMA(ohlc)
