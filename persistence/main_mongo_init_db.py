@@ -60,10 +60,14 @@ for kucoin_pair in kucoin_pairs:
     if pairs.find_one({'exchange': KUCOIN, 'pair': kucoin_pair['symbol']}) is None:
         pairs.insert_one({'exchange': KUCOIN, 'pair': kucoin_pair['symbol']})
 
-# intervals
+# intervals ! doit être cohérent avec les mêmes constantes côté front
 std_30m = '30m'
 std_1h = '1h'
+std_2h = '2h'
 std_4h = '4h'
+std_6h = '6h'
+std_8h = '8h'
+std_12h = '12h'
 std_1d = '1d'
 std_1w = '1w'
 intervals = get_intervals_collection()
@@ -72,11 +76,11 @@ binance_disabled_intervals = ['1m', '3m', '5m', '15m']
 binance_allowed_intervals = [
     {'interval': '30m', 'interval_std': std_30m},
     {'interval': '1h', 'interval_std': std_1h},
-    {'interval': '2h', 'interval_std': None},
+    {'interval': '2h', 'interval_std': std_2h},
     {'interval': '4h', 'interval_std': std_4h},
-    {'interval': '6h', 'interval_std': None},
-    {'interval': '8h', 'interval_std': None},
-    {'interval': '12h', 'interval_std': None},
+    {'interval': '6h', 'interval_std': std_6h},
+    {'interval': '8h', 'interval_std': std_8h},
+    {'interval': '12h', 'interval_std': std_12h},
     {'interval': '1d', 'interval_std': std_1d},
     {'interval': '3d', 'interval_std': None},
     {'interval': '1w', 'interval_std': std_1w}
@@ -129,7 +133,7 @@ gate_allowed_intervals = [
     {'interval': '30m', 'interval_std': std_30m},
     {'interval': '1h', 'interval_std': std_1h},
     {'interval': '4h', 'interval_std': std_4h},
-    {'interval': '8h', 'interval_std': None},
+    {'interval': '8h', 'interval_std': std_8h},
     {'interval': '1d', 'interval_std': std_1d},
     {'interval': '1w', 'interval_std': std_1w},
 ]
@@ -146,11 +150,11 @@ kucoin_disabled_intervals = ['1min', '3min', '5min', '15min']
 kucoin_allowed_intervals = [
     {'interval': '30min', 'interval_std': std_30m},
     {'interval': '1hour', 'interval_std': std_1h},
-    {'interval': '2hour', 'interval_std': None},
+    {'interval': '2hour', 'interval_std': std_2h},
     {'interval': '4hour', 'interval_std': std_4h},
-    {'interval': '6hour', 'interval_std': None},
-    {'interval': '8hour', 'interval_std': None},
-    {'interval': '12hour', 'interval_std': None},
+    {'interval': '6hour', 'interval_std': std_6h},
+    {'interval': '8hour', 'interval_std': std_8h},
+    {'interval': '12hour', 'interval_std': std_12h},
     {'interval': '1day', 'interval_std': std_1d},
     {'interval': '1week', 'interval_std': std_1w}
 ]
