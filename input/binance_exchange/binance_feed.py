@@ -48,5 +48,5 @@ class BinanceFeed:
 
 
 if __name__ == "__main__":
-    binanceFeed = BinanceFeed('ETHEUR', '1h')
+    binanceFeed = BinanceFeed('ETHUSDT', '1h')
     binanceFeed.update_data()

@@ -1,5 +1,6 @@
-from persistence.mongo_constants import get_ohlc_collection
 from pymongo import DESCENDING
+
+from persistence.mongo_constants import get_ohlc_collection
 
 # db: trading_data
 # collection: ohlc
@@ -102,6 +103,27 @@ def get_last(ohlc_definition, last):
     return ohlcs
 
 
+def get_by_timestamp(ohlc, start):
+    """retrieves last ohlc sorting by timestamp desc
+
+    Parameters
+    ----------
+    ohlc : {exchange pair interval}
+    start: timestamp for the start search
+    Returns
+    -------
+    void
+    """
+    ohlcs = []
+    result = ohlc_collection.find(
+        {'exchange': ohlc['exchange'], 'pair': ohlc['pair'], 'interval': ohlc['interval'],
+         'timestamp': {'$gte': start}})
+    for ohlc in result:
+        ohlc['_id'] = str(ohlc['_id'])
+        ohlcs.append(ohlc)
+    return ohlcs
+
+
 # UPDATE
 
 # DELETE
@@ -127,5 +149,7 @@ if __name__ == "__main__":
              'open': 1002.1234567,
              'high': 2002.2345678, 'low': 504.3456789, 'close': 1751, 'volume': 4000}
     insert_or_update(ohlc5)
-    result = get_last_timestamp({'exchange': 'binance', 'pair': 'ETHEUR', 'interval': '1h'})
+    # result = get_last_timestamp({'exchange': 'binance', 'pair': 'ETHEUR', 'interval': '1h'})
+    # print(result)
+    result = get_by_timestamp({'exchange': 'FAKE', 'pair': 'ETHEUR', 'interval': '1h'}, 1606939487)
     print(result)

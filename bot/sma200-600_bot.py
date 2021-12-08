@@ -1,17 +1,25 @@
 import ta
 
 from input.binance_exchange.binance_client import BinanceClient
+from persistence.ohlc_dao import get_by_timestamp
 
 
-class BinanceBot:
+class Sma200600Bot:
     def __init__(self):
         pass
 
-    def launchBotSMA(self, ohlc):
+    @staticmethod
+    def description():
+        description = 'Ce bot permet de calculer les Moyennes Mobiles Simple 200 (rapide) et 600 (lente). ' \
+                      'Achat lorque la MM200 croise a la hausse la MM600' \
+                      'Vente lorque la MM200 croise a la baisse la MM600'
+        return description
+
+    def backTest(self, ohlc):
         ohlc['SMA200'] = ta.trend.sma_indicator(ohlc['close'], 200)
         ohlc['SMA600'] = ta.trend.sma_indicator(ohlc['close'], 600)
 
-        usdt = 500
+        usdt = 1000
         btc = 0
         last_index = ohlc.first_valid_index()
 
@@ -36,7 +44,8 @@ class BinanceBot:
 
 if __name__ == "__main__":
     bclient = BinanceClient()
-    ohlc = bclient.get_ohlc('BTCUSDT', '1h', 1606939487)
-    print(ohlc.size)
-    bibot = BinanceBot()
-    bibot.launchBotSMA(ohlc)
+    ohlcs = bclient.get_ohlc('BTCUSDT', '1h', 1606939487)
+    print(ohlcs.size)
+    # ohlc_brochain = get_by_timestamp({'exchange': 'binance', 'pair': 'ETHUSDT', 'interval': '1h'}, 1606939487)
+    sma_bot = Sma200600Bot()
+    sma_bot.backTest(ohlcs)

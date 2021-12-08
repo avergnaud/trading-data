@@ -19,7 +19,7 @@ def get_all():
 def get_by_exchange(exchange):
     # list
     pairs = []
-    for pair in pairs_collection.find({ 'exchange': exchange }):
+    for pair in pairs_collection.find({'exchange': exchange}):
         pair['_id'] = str(pair['_id'])
         pairs.append(pair)
     return pairs

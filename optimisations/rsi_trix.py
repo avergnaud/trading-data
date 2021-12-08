@@ -40,19 +40,19 @@ class ParamOpti:
         # -- Indicators, you can edit every value --
         df['EMA200'] = ta.trend.ema_indicator(close=df['close'], window=200)
         # -- Trix Indicator --
-        trixLength = 7
-        trixSignal = 15
+        trix_length = 7
+        trix_signal = 15
         df['TRIX'] = ta.trend.ema_indicator(
-            ta.trend.ema_indicator(ta.trend.ema_indicator(close=df['close'], window=trixLength), window=trixLength),
-            window=trixLength)
+            ta.trend.ema_indicator(ta.trend.ema_indicator(close=df['close'], window=trix_length), window=trix_length),
+            window=trix_length)
         df['TRIX_PCT'] = df["TRIX"].pct_change() * 100
-        df['TRIX_SIGNAL'] = ta.trend.sma_indicator(df['TRIX_PCT'], trixSignal)
+        df['TRIX_SIGNAL'] = ta.trend.sma_indicator(df['TRIX_PCT'], trix_signal)
         df['TRIX_HISTO'] = df['TRIX_PCT'] - df['TRIX_SIGNAL']
 
         # -- Stochasitc RSI --
         df['STOCH_RSI'] = ta.momentum.stochrsi(close=df['close'], window=12, smooth1=3, smooth2=3)
-        stochTop = 0.7
-        stochBottom = 0.28
+        stoch_top = 0.7
+        stoch_bottom = 0.28
 
         print("Indicators loaded 100%")
 
@@ -74,7 +74,7 @@ class ParamOpti:
         for i in range(loopI[0], loopI[1], loopI[2]):
             clear_output(wait=True)
             count += 1
-            print("Loading...", count, '/', max_count)
+            # print("Loading...", count, '/', max_count)
             # -- You can change variables below --
             usdt = 1000
             coin = 0
@@ -83,23 +83,25 @@ class ParamOpti:
 
             for index, row in dfTest.iterrows():
                 # BUY
-                if self.buyCondition(row, stochTop) and usdt > 0:
+                if self.buyCondition(row, stoch_top) and usdt > 0:
                     coin = (usdt / dfTest['close'][index]) - 0.0007 * (usdt / dfTest['close'][index])
                     usdt = 0
 
                 # SELL
-                elif self.sellCondition(row, stochBottom) and coin > 0:
+                elif self.sellCondition(row, stoch_bottom) and coin > 0:
                     usdt = coin * dfTest['close'][index] - (0.0007 * coin * dfTest['close'][index])
                     coin = 0
 
             myrow = {'param1': i, 'result': coin * dfTest.iloc[len(dfTest) - 1]['close'] + usdt}
             dt = dt.append(myrow, ignore_index=True)
 
+        # Affichage en direct du résultat
+        # print(dt.sort_values(by=['result']))
+
         # Affichage du graphe sous forme d image
         dt.plot.scatter(x='param1', y=1, c='result', s=50, colormap='OrRd', figsize=(8, 6))
         plt.show()
-
-        return dt
+        return plt
 
 
 if __name__ == "__main__":
@@ -110,4 +112,4 @@ if __name__ == "__main__":
     param_opti = ParamOpti()
     dt = param_opti.launchOptimization(ohlcs)
     # affiche les résultat en tableau
-    print(dt.sort_values(by=['result']))
+
