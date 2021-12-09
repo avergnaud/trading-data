@@ -197,7 +197,6 @@ if __name__ == "__main__":
     result = get_by_timestamp({'exchange': 'FAKE', 'pair': 'ETHEUR', 'interval': '1h'}, 160693948)
     print(result)
 
-    # result_interval = get_by_timestamp_interval({'exchange': 'FAKE', 'pair': 'ETHEUR', 'interval': '1h'}, 160693948, 1639045809)
-    # print(result_interval)
-    # ohlc_brochain = mongoDataToDataframe(result)
-    # print(ohlc_brochain)
+    # result_interval = get_by_timestamp_interval({'exchange': 'FAKE', 'pair': 'ETHEUR', 'interval': '1h'},
+    # 160693948, 1639045809)
+    # print(result_interval) ohlc_brochain = mongoDataToDataframe(result) print(ohlc_brochain)
