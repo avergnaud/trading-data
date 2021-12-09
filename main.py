@@ -10,6 +10,7 @@ from cron.feed_cron_manager import FeedCronManager
 from optimisations.rsi_trix import RsiTrix
 from persistence import exchanges_dao, pairs_dao, intervales_dao, ohlc_definition_dao, ohlc_dao
 from persistence.ohlc_dao import mongoDataToDataframe, get_by_timestamp
+from utils.utils import pyplotToBase64Img
 
 app = Flask(__name__)
 CORS(app)
@@ -96,14 +97,10 @@ def get_all_ohlc(exchange, pair, interval):
 @app.route("/optimisations")
 def get_optimisations():
     ohlc_brochain = mongoDataToDataframe(
-    get_by_timestamp({'exchange': 'binance', 'pair': 'ETHUSDT', 'interval': '1h'}, 1606939487))
-    rsitrix = RsiTrix()
-    plt = rsitrix.launchOptimization(ohlc_brochain)
+        get_by_timestamp({'exchange': 'binance', 'pair': 'ETHUSDT', 'interval': '1h'}, 1606939487))
 
-    my_string_i_obytes = io.BytesIO()
-    plt.savefig(my_string_i_obytes, format='png')
-    my_string_i_obytes.seek(0)
-    return base64.b64encode(my_string_i_obytes.read())
+    rsitrix = RsiTrix()
+    return pyplotToBase64Img(rsitrix.launchOptimization(ohlc_brochain))
 
 
 if __name__ == "__main__":

@@ -9,6 +9,7 @@ from matplotlib import pyplot as plt
 
 import warnings
 from persistence.ohlc_dao import mongoDataToDataframe, get_by_timestamp
+from utils.utils import pyplotToBase64Img
 
 
 class RsiTrix:
@@ -115,9 +116,5 @@ if __name__ == "__main__":
     rsitrix = RsiTrix()
     plt = rsitrix.launchOptimization(ohlc_brochain)
 
-    my_stringIObytes = io.BytesIO()
-    plt.savefig(my_stringIObytes, format='png')
-    my_stringIObytes.seek(0)
-    my_base64_jpgData = base64.b64encode(my_stringIObytes.read())
-    print(my_base64_jpgData)
+    print(pyplotToBase64Img(plt))
     # affiche les résultat en tableau
