@@ -1,15 +1,19 @@
 import time
 from threading import Thread
 
-from flask import Flask, jsonify, request
+from flask import Flask
 from flask_cors import CORS
 
 from cron.feed_cron_manager import FeedCronManager
-from persistence import exchanges_dao, pairs_dao, intervales_dao, ohlc_definition_dao, ohlc_dao
+from persistence import ohlc_definition_dao
+from rest.exchanges_controller import exchanges_page
+from rest.ohlc_controller import ohlcs_page
 from rest.optimisations_controller import optimisations_page
 
 app = Flask(__name__)
 app.register_blueprint(optimisations_page)
+app.register_blueprint(exchanges_page)
+app.register_blueprint(ohlcs_page)
 CORS(app)
 
 
@@ -31,64 +35,6 @@ def before_first_request_func():
 @app.route("/")
 def hello_world():
     return "<p>Hello, World!</p>"
-
-
-# /exchanges
-@app.route("/exchanges")
-def get_exchanges():
-    liste = exchanges_dao.get_all()
-    return jsonify(liste)
-
-
-# /exchanges/:exchange_name/pairs
-@app.route("/exchanges/<exchange>/pairs")
-def get_exchange_pairs(exchange):
-    liste = pairs_dao.get_by_exchange(exchange)
-    return jsonify(liste)
-
-
-# /exchanges/:exchange_name/intervals
-@app.route("/exchanges/<exchange>/intervals")
-def get_exchange_intervals(exchange):
-    liste = intervales_dao.get_by_exchange(exchange)
-    return jsonify(liste)
-
-
-# /ohlc_definitions
-@app.route("/ohlc_definitions", methods=['GET', 'POST', 'DELETE'])
-def ohlc_definitions():
-    if request.method == 'POST':
-        result = ohlc_definition_dao.insert_or_update(request.json)
-        FeedCronManager.get_instance().add_cron(result)
-        return jsonify(result), 200
-    elif request.method == 'DELETE':
-        ohlc_definition_dao.delete(request.json)
-        FeedCronManager.get_instance().remove_cron(request.json)
-        return jsonify(request.json), 204
-    else:
-        liste = ohlc_definition_dao.get_all()
-        return jsonify(liste)
-
-
-# /exchanges/:exchange_name/intervals
-@app.route("/ohlcs/<exchange>/<pair>/<interval>")
-def get_all_ohlc(exchange, pair, interval):
-    last = request.args.get('last')
-    if last is not None:
-        liste = ohlc_dao.get_last({
-            'exchange': exchange,
-            'pair': pair,
-            'interval': interval
-        }, int(last))
-        return jsonify(liste)
-    else:
-        liste = ohlc_dao.get_all({
-            'exchange': exchange,
-            'pair': pair,
-            'interval': interval
-        })
-        return jsonify(liste)
-
 
 
 if __name__ == "__main__":
