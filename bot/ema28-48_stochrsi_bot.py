@@ -5,7 +5,7 @@ import ftx
 import pandas as pd
 import ta
 
-from input.binance_exchange.binance_client import BinanceClient
+from persistence.ohlc_dao import mongoDataToDataframe, get_by_timestamp_interval
 
 api_endpoint = 'https://ftx.com/api'
 api_key = os.getenv('FTX_API_KEY')
@@ -48,11 +48,11 @@ class Ema2848StochRsiBot:
         ohlc['STOCH_RSI'] = ta.momentum.stochrsi(ohlc['close'])
 
         usdt = 1000
-        # initalWallet = usdt
+        initalWallet = usdt
         coin = 0
         wallet = 1000
         last_ath = 0
-        fee = 0.00063
+        fee = 0.0007
 
         for index, row in ohlc.iterrows():
             # Buy
@@ -64,7 +64,7 @@ class Ema2848StochRsiBot:
                 wallet = coin * row['close']
                 if wallet > last_ath:
                     last_ath = wallet
-                print("Buy COIN at", ohlc['close'][index], '$ the', index)
+                # print("Buy COIN at", ohlc['close'][index], '$ the', index)
                 myrow = {'date': index, 'position': "Buy", 'price': row['close'], 'frais': frais, 'fiat': usdt,
                          'coins': coin, 'wallet': wallet, 'drawBack': (wallet - last_ath) / last_ath}
                 ohlc = ohlc.append(myrow, ignore_index=True)
@@ -78,12 +78,13 @@ class Ema2848StochRsiBot:
                 wallet = usdt
                 if wallet > last_ath:
                     last_ath = wallet
-                print("Sell COIN at", ohlc['close'][index], '$ the', index)
+                # print("Sell COIN at", ohlc['close'][index], '$ the', index)
                 myrow = {'date': index, 'position': "Sell", 'price': row['close'], 'frais': frais, 'fiat': usdt,
                          'coins': coin, 'wallet': wallet, 'drawBack': (wallet - last_ath) / last_ath}
                 ohlc = ohlc.append(myrow, ignore_index=True)
 
         print("Final balance :", round(wallet, 2), "$")
+        print("Performance vs US Dollar :", round(((wallet - initalWallet) / initalWallet) * 100, 2), "%")
 
     # Utilisation en condition réelle
     def launchBot(self, ohlc):
@@ -133,8 +134,12 @@ class Ema2848StochRsiBot:
 
 
 if __name__ == "__main__":
-    bclient = BinanceClient()
-    ohlcs = bclient.get_ohlc('ETHUSDT', '1h', 1483228817000)
+    # bclient = BinanceClient()
+    # ohlcs = bclient.get_ohlc('ETHUSDT', '1h', 1514764800000, 1577836799000)
+    # print(ohlcs)
+    # entre le 01/01/2018 et le 31/12/2019
+    ohlc_brochain = mongoDataToDataframe(
+        get_by_timestamp_interval({'exchange': 'binance', 'pair': 'ETHUSDT', 'interval': '1h'}, 1514764800, 1577836799))
     # print(ohlcs.size)
     ema2848stockrsi = Ema2848StochRsiBot()
-    ema2848stockrsi.backTest(ohlcs)
+    ema2848stockrsi.backTest(ohlc_brochain)

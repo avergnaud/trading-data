@@ -6,7 +6,7 @@ class BinanceClient:
     def __init__(self):
         pass
 
-    def get_ohlc(self, pair, interval, start):
+    def get_ohlc(self, pair, interval, start, end=None):
         """Calls the Binance API, transforms some data, return the klines data
 
         Parameters
@@ -33,16 +33,17 @@ class BinanceClient:
         start : (str|int)
             Start date string in UTC format or timestamp in milliseconds
             Example : "01 november 2021", 1635724800000
+        end : (str|int)
+            Start date string in UTC format or timestamp in milliseconds
+            Example : "01 november 2021", 1635724800000
 
         Returns
         -------
         pandas.core.frame.DataFrame
             a panda DataFrame containing timestamp (index), open, high, low, close
         """
-
         client = Client()
-
-        klines_t = client.get_historical_klines(pair, interval, str(start))
+        klines_t = client.get_historical_klines(pair, interval, start, end)
 
         df = pd.DataFrame(klines_t,
                           columns=['timestamp', 'open', 'high', 'low', 'close', 'volume', 'close_time', 'quote_av',
@@ -84,12 +85,12 @@ class BinanceClient:
 
 if __name__ == "__main__":
     cclient = BinanceClient()
-    pairs = cclient.get_pairs()
-    print(pairs)
+    # pairs = cclient.get_pairs()
+    # print(pairs)
     # 1700
-    # ohlc = cclient.get_ohlc('ETHUSDT', '5m', '1 hour ago UTC')
-    # ohlc = cclient.get_ohlc('ETHUSDT', '1h', 1635724800000)
-    # print(ohlc.size)
+    # ohlc = cclient.get_ohlc('ETHUSDT', '1h', '1 hour ago UTC')
+    ohlc = cclient.get_ohlc('ETHUSDT', '1h', 1514764800000, 1577836799000)
+    print(ohlc)
 
     # client = Client()
     # klines_t = client.get_historical_klines('ETHUSDT', '1d', "01 july 2017", "10 september 2017")
