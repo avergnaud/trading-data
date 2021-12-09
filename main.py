@@ -7,7 +7,7 @@ from flask_cors import CORS
 from cron.feed_cron_manager import FeedCronManager
 from persistence import ohlc_definition_dao
 from rest.exchanges_controller import exchanges_page
-from rest.ohlc_controller import ohlcs_page
+from rest.ohlcs_controller import ohlcs_page
 from rest.optimisations_controller import optimisations_page
 
 app = Flask(__name__)
