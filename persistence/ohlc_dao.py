@@ -1,3 +1,4 @@
+import pandas as pd
 from pymongo import DESCENDING
 
 from persistence.mongo_constants import get_ohlc_collection
@@ -124,9 +125,52 @@ def get_by_timestamp(ohlc, start):
     return ohlcs
 
 
+def get_by_timestamp_interval(ohlc, start, end):
+    """retrieves last ohlc sorting by timestamp desc
+
+    Parameters
+    ----------
+    ohlc : {exchange pair interval}
+    start: timestamp for the start search
+    end: timestamp for the end search
+    Returns
+    -------
+    void
+    """
+    ohlcs = []
+    result = ohlc_collection.find(
+        {'exchange': ohlc['exchange'], 'pair': ohlc['pair'], 'interval': ohlc['interval'],
+         'timestamp': {'$lt': end, '$gte': start}})
+    for ohlc in result:
+        ohlc['_id'] = str(ohlc['_id'])
+        ohlcs.append(ohlc)
+    return ohlcs
+
+
 # UPDATE
 
 # DELETE
+
+# Méthode utilitaire --> Transformation donnée mongo to dataFrame
+def mongoDataToDataframe(ohlc_mongo):
+    df = pd.DataFrame(ohlc_mongo,
+                      columns=['_id', 'exchange', 'pair', 'interval', 'timestamp', 'open', 'high', 'low', 'close',
+                               'volume'])
+    df['close'] = pd.to_numeric(df['close'])
+    df['high'] = pd.to_numeric(df['high'])
+    df['low'] = pd.to_numeric(df['low'])
+    df['open'] = pd.to_numeric(df['open'])
+    df['volume'] = pd.to_numeric(df['volume'])
+
+    del df['_id']
+    del df['exchange']
+    del df['pair']
+    del df['interval']
+
+    df = df.set_index(df['timestamp'])
+    df.index = pd.to_datetime(df.index, unit='s')
+    del df['timestamp']
+    return df.copy()
 
 
 if __name__ == "__main__":
@@ -150,6 +194,10 @@ if __name__ == "__main__":
              'high': 2002.2345678, 'low': 504.3456789, 'close': 1751, 'volume': 4000}
     insert_or_update(ohlc5)
     # result = get_last_timestamp({'exchange': 'binance', 'pair': 'ETHEUR', 'interval': '1h'})
-    # print(result)
-    result = get_by_timestamp({'exchange': 'FAKE', 'pair': 'ETHEUR', 'interval': '1h'}, 1606939487)
+    result = get_by_timestamp({'exchange': 'FAKE', 'pair': 'ETHEUR', 'interval': '1h'}, 160693948)
     print(result)
+
+    # result_interval = get_by_timestamp_interval({'exchange': 'FAKE', 'pair': 'ETHEUR', 'interval': '1h'}, 160693948, 1639045809)
+    # print(result_interval)
+    # ohlc_brochain = mongoDataToDataframe(result)
+    # print(ohlc_brochain)

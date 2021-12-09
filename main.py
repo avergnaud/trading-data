@@ -1,3 +1,5 @@
+import base64
+import io
 import time
 from threading import Thread
 
@@ -5,7 +7,9 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 from cron.feed_cron_manager import FeedCronManager
+from optimisations.rsi_trix import RsiTrix
 from persistence import exchanges_dao, pairs_dao, intervales_dao, ohlc_definition_dao, ohlc_dao
+from persistence.ohlc_dao import mongoDataToDataframe, get_by_timestamp
 
 app = Flask(__name__)
 CORS(app)
@@ -91,21 +95,15 @@ def get_all_ohlc(exchange, pair, interval):
 # /optimisations
 @app.route("/optimisations")
 def get_optimisations():
-    return '{"param1":{"0":7.0,"1":8.0,"2":9.0,"3":10.0,"4":11.0,"5":12.0,"6":13.0,"7":14.0,"8":15.0,"9":16.0,' \
-           '"10":17.0,"11":18.0,"12":19.0,"13":20.0,"14":21.0,"15":22.0,"16":23.0,"17":24.0,"18":25.0,"19":26.0,' \
-           '"20":27.0,"21":28.0,"22":29.0},"result":{"0":3691.8112687692,"1":3868.3757249846,"2":6253.2851437062,' \
-           '"3":5657.7754172073,"4":5637.857070928,"5":6245.0480508089,"6":5725.8842419585,"7":4848.1290702486,' \
-           '"8":3977.8426991517,"9":3739.2251208418,"10":2964.5740828534,"11":2894.3730376287,"12":2446.8452659876,' \
-           '"13":2753.3332577271,"14":3003.657207303,"15":3034.1452648782,"16":2877.6702888441,"17":2751.7471988231,' \
-           '"18":2972.9477276795,"19":3011.3484857905,"20":3302.0256391334,"21":3206.4326356285,"22":2469.3394626285}} '
+    ohlc_brochain = mongoDataToDataframe(
+    get_by_timestamp({'exchange': 'binance', 'pair': 'ETHUSDT', 'interval': '1h'}, 1606939487))
+    rsitrix = RsiTrix()
+    plt = rsitrix.launchOptimization(ohlc_brochain)
 
-    # bclient = BinanceClient()
-    # # 01 janvier 2021
-    # ohlcs = bclient.get_ohlc('ETHUSDT', '1h', 1609489364)
-    # # print(ohlcs.size)
-    # param_opti = ParamOpti()
-    # dt = param_opti.launchOptimization(ohlcs)
-    # return dt
+    my_string_i_obytes = io.BytesIO()
+    plt.savefig(my_string_i_obytes, format='png')
+    my_string_i_obytes.seek(0)
+    return base64.b64encode(my_string_i_obytes.read())
 
 
 if __name__ == "__main__":
