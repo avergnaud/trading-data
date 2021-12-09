@@ -6,6 +6,7 @@ from flask_cors import CORS
 
 from cron.feed_cron_manager import FeedCronManager
 from persistence import ohlc_definition_dao
+from rest.bots_controller import bots_page
 from rest.exchanges_controller import exchanges_page
 from rest.ohlcs_controller import ohlcs_page
 from rest.optimisations_controller import optimisations_page
@@ -14,6 +15,7 @@ app = Flask(__name__)
 app.register_blueprint(optimisations_page)
 app.register_blueprint(exchanges_page)
 app.register_blueprint(ohlcs_page)
+app.register_blueprint(bots_page)
 CORS(app)
 
 

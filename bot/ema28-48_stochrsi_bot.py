@@ -21,7 +21,7 @@ class Ema2848StochRsiBot:
     def description():
         description = 'Ce bot permet de calculer les Moyennes Mobiles Exponentielles 28 et 48 plus le Stochastic RSI ' \
                       'Achat lorque la EMA28 croise a la hausse la EMA48 et que le RSI < 0.8' \
-                      'Vente lorque la EMA28 croise a la baisse la EMA48 et que le RSI > 0.0'
+                      'Vente lorque la EMA28 croise a la baisse la EMA48 et que le RSI > 0.2'
         return description
 
     @staticmethod
