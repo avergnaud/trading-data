@@ -24,7 +24,7 @@ class Supertrend3Ema90StochRsiBot:
                       'Achat lorque qu au moins 2 supertrend sont à la hausse, que le prix de cloture est au dessus ' \
                       'du EMA90 que le RSI < 0.8' \
                       'Vente lorque qu au moins 2 supertrend sont à la baisse, que le RSI > 0.2.' \
-                      '4000% sur lADA'
+                      '4000% sur l ADA'
         return description
 
     def backTest(self, ohlc):
@@ -125,7 +125,7 @@ class Supertrend3Ema90StochRsiBot:
 if __name__ == "__main__":
     # entre le 01/01/2018 et le 31/12/2019
     # ohlc_brochain = mongoDataToDataframe(
-    #     get_by_timestamp_interval({'exchange': 'binance', 'pair': 'ETHUSDT', 'interval': '1h'}, 1514764800, 1577836799))
+    # get_by_timestamp_interval({'exchange': 'binance', 'pair': 'ETHUSDT', 'interval': '1h'}, 1514764800, 1577836799))
     # Depuis le 17 aout 2017
     ohlc_brochain = mongoDataToDataframe(
         get_by_timestamp({'exchange': 'binance', 'pair': 'ADAUSDT', 'interval': '1h'}, 1502928000))
