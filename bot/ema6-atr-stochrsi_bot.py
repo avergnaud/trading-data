@@ -182,7 +182,6 @@ class Ema6AtrStochRsiBot:
 if __name__ == "__main__":
     bclient = BinanceClient()
     ohlcs = bclient.get_ohlc('BTCUSDT', '1h', 1606939487)
-    print(ohlcs.size)
     # ohlc_brochain = get_by_timestamp({'exchange': 'binance', 'pair': 'ETHUSDT', 'interval': '1h'}, 1606939487)
     emaatrrsi_bot = Ema6AtrStochRsiBot()
     emaatrrsi_bot.backTest(ohlcs)
