@@ -19,7 +19,7 @@ def get_optimisations_rsi_Trix():
 
 # /rsitrix/:exchange_name/:pair/:interval/:start/:end
 @optimisations_page.route('/rsitrix/<exchange>/<pair>/<interval>/<start>/<end>')
-def get_optimisations_rsi_Trix(exchange, pair, interval, start, end):
+def get_optimisations_rsi_trix_with_info(exchange, pair, interval, start, end):
     ohlc_brochain = mongoDataToDataframe(
         get_by_timestamp_interval({'exchange': exchange, 'pair': pair, 'interval': interval}, start, end))
 

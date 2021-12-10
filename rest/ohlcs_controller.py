@@ -4,7 +4,7 @@ from flask import Blueprint, request, jsonify
 from cron.feed_cron_manager import FeedCronManager
 from persistence import ohlc_definition_dao, ohlc_dao
 
-ohlcs_page = Blueprint('exchanges_page', __name__, url_prefix='/ohlcs')
+ohlcs_page = Blueprint('ohlcs_page', __name__, url_prefix='/ohlcs')
 
 
 # /definitions
