@@ -1,15 +1,21 @@
 import ta
-
+from bot.generic_bot import GenericBot
 from input.binance_exchange.binance_client import BinanceClient
-from persistence.ohlc_dao import get_by_timestamp
 
 
-class Sma200600Bot:
+class Sma200600Bot(GenericBot):
+
+    NAME = "SMA200 + SMA600"
+
     def __init__(self):
         pass
 
-    @staticmethod
-    def description():
+    @classmethod
+    def getName(cls):
+        return cls.NAME
+
+    @classmethod
+    def description(cls):
         description = 'Ce bot permet de calculer les Moyennes Mobiles Simple 200 (rapide) et 600 (lente). ' \
                       'Achat lorque la MM200 croise a la hausse la MM600' \
                       'Vente lorque la MM200 croise a la baisse la MM600'

@@ -1,10 +1,9 @@
 import os
-
+from bot.generic_bot import GenericBot
 import ftx
 import pandas as pd
 import pandas_ta as pda
 import ta
-
 from persistence.ohlc_dao import mongoDataToDataframe, get_by_timestamp_interval, get_by_timestamp
 
 api_endpoint = 'https://ftx.com/api'
@@ -12,13 +11,20 @@ api_key = os.getenv('FTX_API_KEY')
 api_secret = os.getenv('FTX_API_SECRET')
 
 
-class Supertrend3Ema90StochRsiBot:
+class Supertrend3Ema90StochRsiBot(GenericBot):
+
+    NAME = "EMA90 + Stochastic RSI + SUPER_TRENDS"
+
     def __init__(self):
         self.client = ftx.FtxClient()
         pass
 
-    @staticmethod
-    def description():
+    @classmethod
+    def getName(cls):
+        return cls.NAME
+
+    @classmethod
+    def description(cls):
         description = 'Ce bot permet de calculer la Moyenne Mobile Exponentielle 90, le Stochastic RSI ainsi que 3 ' \
                       'supertrend de longueur et de multiplier différents' \
                       'Achat lorque qu au moins 2 supertrend sont à la hausse, que le prix de cloture est au dessus ' \

@@ -2,14 +2,23 @@ import pandas as pd
 import ta
 
 from input.binance_exchange.binance_client import BinanceClient
+from persistence.ohlc_dao import get_by_timestamp_interval
+from bot.generic_bot import GenericBot
 
 
-class Ema6AtrStochRsiBot:
+class Ema6AtrStochRsiBot(GenericBot):
+
+    NAME = "6 EMA + Stochastic RSI"
+
     def __init__(self):
         pass
 
-    @staticmethod
-    def description():
+    @classmethod
+    def getName(cls):
+        return cls.NAME
+
+    @classmethod
+    def description(cls):
         description = 'Statégie de l aligator :' \
                       'Achat si les 6 moyennes mobiles sont orientées dans le bon sens et que le stochRsi n est pas en surachat (donc stochRsi < 0.82)' \
                       'Vente lorque la MM200 croise la MM la plus basse et que le stochRsi n est pas en survente (donc stochRsi > 0.2)' \
@@ -30,6 +39,10 @@ class Ema6AtrStochRsiBot:
             return True
         else:
             return False
+
+    def backTest(self, ohlc_definition, fromTimestampSeconds, toTimestampSeconds):
+        ohlcs = get_by_timestamp_interval(ohlc_definition, 1514764800, 1577836799)
+        self.backTest(ohlcs)
 
     def backTest(self, ohlc):
         ohlc.drop(ohlc.columns.difference(['open', 'high', 'low', 'close', 'volume']), axis=1, inplace=True)

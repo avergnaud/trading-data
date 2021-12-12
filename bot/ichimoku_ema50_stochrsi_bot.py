@@ -1,15 +1,22 @@
 import pandas as pd
 import ta
-
+from bot.generic_bot import GenericBot
 from input.binance_exchange.binance_client import BinanceClient
 
 
-class IchimokuEma50StochRsiBot:
+class IchimokuEma50StochRsiBot(GenericBot):
+
+    NAME = "EMA50 + Stochastic RSI + Ichimoku"
+
     def __init__(self):
         pass
 
-    @staticmethod
-    def description():
+    @classmethod
+    def getName(cls):
+        return cls.NAME
+
+    @classmethod
+    def description(cls):
         description = 'Statégie de l aligator :' \
                       'Achat si les 6 moyennes mobiles sont orientées dans le bon sens et que le stochRsi n est pas en surachat (donc stochRsi < 0.82)' \
                       'Vente lorque la MM200 croise la MM la plus basse et que le stochRsi n est pas en survente (donc stochRsi > 0.2)' \

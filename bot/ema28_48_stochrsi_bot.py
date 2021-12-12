@@ -1,10 +1,9 @@
 import os
 from math import floor
-
 import ftx
 import pandas as pd
 import ta
-
+from bot.generic_bot import GenericBot
 from persistence.ohlc_dao import mongoDataToDataframe, get_by_timestamp_interval
 
 api_endpoint = 'https://ftx.com/api'
@@ -12,13 +11,20 @@ api_key = os.getenv('FTX_API_KEY')
 api_secret = os.getenv('FTX_API_SECRET')
 
 
-class Ema2848StochRsiBot:
+class Ema2848StochRsiBot(GenericBot):
+
+    NAME = "EMA28 + EMA48 + Stochastic RSI"
+
     def __init__(self):
         self.client = ftx.FtxClient()
         pass
 
-    @staticmethod
-    def description():
+    @classmethod
+    def getName(cls):
+        return cls.NAME
+
+    @classmethod
+    def description(cls):
         description = 'Ce bot permet de calculer les Moyennes Mobiles Exponentielles 28 et 48 plus le Stochastic RSI ' \
                       'Achat lorque la EMA28 croise a la hausse la EMA48 et que le RSI < 0.8' \
                       'Vente lorque la EMA28 croise a la baisse la EMA48 et que le RSI > 0.2'
