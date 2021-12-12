@@ -1,8 +1,8 @@
-from six_ema_atr_stochrsi_bot import Ema6AtrStochRsiBot
-from ema28_48_stochrsi_bot import Ema2848StochRsiBot
-from ichimoku_ema50_stochrsi_bot import IchimokuEma50StochRsiBot
-from sma200_600_bot import Sma200600Bot
-from supertrend3_ema90_stochrsi_bot import Supertrend3Ema90StochRsiBot
+from bot.six_ema_atr_stochrsi_bot import Ema6AtrStochRsiBot
+from bot.ema28_48_stochrsi_bot import Ema2848StochRsiBot
+from bot.ichimoku_ema50_stochrsi_bot import IchimokuEma50StochRsiBot
+from bot.sma200_600_bot import Sma200600Bot
+from bot.supertrend3_ema90_stochrsi_bot import Supertrend3Ema90StochRsiBot
 
 
 def get_all_bot_names():
