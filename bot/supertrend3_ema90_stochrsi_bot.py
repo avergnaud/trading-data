@@ -1,4 +1,6 @@
 import os
+
+from backtest.backtest_result import BacktestResult
 from bot.generic_bot import GenericBot
 import ftx
 import pandas as pd
@@ -13,7 +15,7 @@ api_secret = os.getenv('FTX_API_SECRET')
 
 class Supertrend3Ema90StochRsiBot(GenericBot):
 
-    NAME = "EMA90 + Stochastic RSI + SUPER_TRENDS"
+    NAME = "ema90_stochastic_rsi_super_trends"
 
     def __init__(self):
         self.client = ftx.FtxClient()
@@ -32,6 +34,11 @@ class Supertrend3Ema90StochRsiBot(GenericBot):
                       'Vente lorque qu au moins 2 supertrend sont à la baisse, que le RSI > 0.2.' \
                       '4000% sur l ADA'
         return description
+
+    def back_test_between(self, ohlc_definition, from_timestamp_seconds, to_timestamp_seconds):
+        ohlcs_list = get_by_timestamp_interval(ohlc_definition, from_timestamp_seconds, to_timestamp_seconds)
+        ohlcs = pd.DataFrame(ohlcs_list)
+        return self.backTest(ohlcs)
 
     def backTest(self, ohlc):
         ohlc.drop(ohlc.columns.difference(['open', 'high', 'low', 'close', 'volume']), axis=1, inplace=True)
@@ -125,7 +132,11 @@ class Supertrend3Ema90StochRsiBot(GenericBot):
             lastRow = row
 
         print("Final balance :", round(wallet, 2), "$")
-        print("Performance vs US Dollar :", round(((wallet - initalWallet) / initalWallet) * 100, 2), "%")
+        perf = str(round(((wallet - initalWallet) / initalWallet) * 100, 2)) + "%"
+        print("Performance vs US Dollar :", perf)
+
+        backtest_result = BacktestResult(perf)
+        return backtest_result
 
 
 if __name__ == "__main__":

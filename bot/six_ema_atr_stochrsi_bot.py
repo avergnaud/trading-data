@@ -1,6 +1,6 @@
 import pandas as pd
 import ta
-
+from backtest.backtest_result import BacktestResult
 from input.binance_exchange.binance_client import BinanceClient
 from persistence.ohlc_dao import get_by_timestamp_interval
 from bot.generic_bot import GenericBot
@@ -8,7 +8,7 @@ from bot.generic_bot import GenericBot
 
 class Ema6AtrStochRsiBot(GenericBot):
 
-    NAME = "6 EMA + Stochastic RSI"
+    NAME: str = "6_ema_stochastic_rsi"
 
     def __init__(self):
         pass
@@ -40,9 +40,10 @@ class Ema6AtrStochRsiBot(GenericBot):
         else:
             return False
 
-    def backTest(self, ohlc_definition, fromTimestampSeconds, toTimestampSeconds):
-        ohlcs = get_by_timestamp_interval(ohlc_definition, 1514764800, 1577836799)
-        self.backTest(ohlcs)
+    def back_test_between(self, ohlc_definition, from_timestamp_seconds, to_timestamp_seconds):
+        ohlcs_list = get_by_timestamp_interval(ohlc_definition, from_timestamp_seconds, to_timestamp_seconds)
+        ohlcs = pd.DataFrame(ohlcs_list)
+        return self.backTest(ohlcs)
 
     def backTest(self, ohlc):
         ohlc.drop(ohlc.columns.difference(['open', 'high', 'low', 'close', 'volume']), axis=1, inplace=True)
@@ -165,7 +166,12 @@ class Ema6AtrStochRsiBot(GenericBot):
         vsHoldPorcentage = ((algoPorcentage - holdPorcentage) / holdPorcentage) * 100
 
         print("Final balance :", round(wallet, 2), "$")
-        print("Performance vs US Dollar :", round(algoPorcentage, 2), "%")
+        perf = str(round(algoPorcentage, 2)) + "%"
+        print("Performance vs US Dollar :", perf)
+
+        backtest_result = BacktestResult(perf)
+        return backtest_result
+
         # print("Buy and Hold Performence :", round(holdPorcentage, 2), "%")
         # Plein de donnée interessante
         # print("Performance vs Buy and Hold :", round(vsHoldPorcentage, 2), "%")

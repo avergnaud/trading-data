@@ -1,12 +1,15 @@
 import pandas as pd
 import ta
+
+from backtest.backtest_result import BacktestResult
 from bot.generic_bot import GenericBot
 from input.binance_exchange.binance_client import BinanceClient
+from persistence.ohlc_dao import get_by_timestamp_interval
 
 
 class IchimokuEma50StochRsiBot(GenericBot):
 
-    NAME = "EMA50 + Stochastic RSI + Ichimoku"
+    NAME: str = "ema50_stochastic_rsi_ichimoku"
 
     def __init__(self):
         pass
@@ -37,6 +40,11 @@ class IchimokuEma50StochRsiBot(GenericBot):
             return True
         else:
             return False
+
+    def back_test_between(self, ohlc_definition, from_timestamp_seconds, to_timestamp_seconds):
+        ohlcs_list = get_by_timestamp_interval(ohlc_definition, from_timestamp_seconds, to_timestamp_seconds)
+        ohlcs = pd.DataFrame(ohlcs_list)
+        return self.backTest(ohlcs)
 
     def backTest(self, ohlc):
         ohlc.drop(ohlc.columns.difference(['open', 'high', 'low', 'close', 'volume']), axis=1, inplace=True)
@@ -113,7 +121,11 @@ class IchimokuEma50StochRsiBot(GenericBot):
             last_row = row
 
         print("Final balance :", round(wallet, 2), "$")
-        print("Performance vs US Dollar :", round(((wallet - inital_wallet) / inital_wallet) * 100, 2), "%")
+        perf = str(round(((wallet - inital_wallet) / inital_wallet) * 100, 2)) + "%"
+        print("Performance vs US Dollar :", perf)
+
+        backtest_result = BacktestResult(perf)
+        return backtest_result
 
 
 if __name__ == "__main__":

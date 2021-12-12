@@ -140,7 +140,7 @@ def get_by_timestamp_interval(ohlc, start, end):
     ohlcs = []
     result = ohlc_collection.find(
         {'exchange': ohlc['exchange'], 'pair': ohlc['pair'], 'interval': ohlc['interval'],
-         'timestamp': {'$lt': end, '$gte': start}})
+         'timestamp': {'$lt': int(end), '$gte': int(start)}})
     for ohlc in result:
         ohlc['_id'] = str(ohlc['_id'])
         ohlcs.append(ohlc)

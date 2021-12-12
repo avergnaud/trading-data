@@ -3,6 +3,8 @@ from math import floor
 import ftx
 import pandas as pd
 import ta
+
+from backtest.backtest_result import BacktestResult
 from bot.generic_bot import GenericBot
 from persistence.ohlc_dao import mongoDataToDataframe, get_by_timestamp_interval
 
@@ -13,7 +15,7 @@ api_secret = os.getenv('FTX_API_SECRET')
 
 class Ema2848StochRsiBot(GenericBot):
 
-    NAME = "EMA28 + EMA48 + Stochastic RSI"
+    NAME: str = "ema28_ema48_stochastic_rsi"
 
     def __init__(self):
         self.client = ftx.FtxClient()
@@ -46,6 +48,11 @@ class Ema2848StochRsiBot(GenericBot):
     def truncate(n, decimals=0):
         r = floor(float(n) * 10 ** decimals) / 10 ** decimals
         return str(r)
+
+    def back_test_between(self, ohlc_definition, from_timestamp_seconds, to_timestamp_seconds):
+        ohlcs_list = get_by_timestamp_interval(ohlc_definition, from_timestamp_seconds, to_timestamp_seconds)
+        ohlcs = pd.DataFrame(ohlcs_list)
+        return self.backTest(ohlcs)
 
     def backTest(self, ohlc):
 
@@ -90,7 +97,11 @@ class Ema2848StochRsiBot(GenericBot):
                 ohlc = ohlc.append(myrow, ignore_index=True)
 
         print("Final balance :", round(wallet, 2), "$")
-        print("Performance vs US Dollar :", round(((wallet - initalWallet) / initalWallet) * 100, 2), "%")
+        perf = str(round(((wallet - initalWallet) / initalWallet) * 100, 2)) + "%"
+        print("Performance vs US Dollar :", perf)
+
+        backtest_result = BacktestResult(perf)
+        return backtest_result
 
     # Utilisation en condition réelle
     def launchBot(self, ohlc):

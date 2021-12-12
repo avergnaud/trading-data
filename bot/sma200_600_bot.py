@@ -1,11 +1,14 @@
 import ta
+import pandas as pd
+from backtest.backtest_result import BacktestResult
 from bot.generic_bot import GenericBot
 from input.binance_exchange.binance_client import BinanceClient
+from persistence.ohlc_dao import get_by_timestamp_interval
 
 
 class Sma200600Bot(GenericBot):
 
-    NAME = "SMA200 + SMA600"
+    NAME: str = "sma200_sma600"
 
     def __init__(self):
         pass
@@ -21,11 +24,17 @@ class Sma200600Bot(GenericBot):
                       'Vente lorque la MM200 croise a la baisse la MM600'
         return description
 
+    def back_test_between(self, ohlc_definition, from_timestamp_seconds, to_timestamp_seconds):
+        ohlcs_list = get_by_timestamp_interval(ohlc_definition, from_timestamp_seconds, to_timestamp_seconds)
+        ohlcs = pd.DataFrame(ohlcs_list)
+        return self.backTest(ohlcs)
+
     def backTest(self, ohlc):
         ohlc['SMA200'] = ta.trend.sma_indicator(ohlc['close'], 200)
         ohlc['SMA600'] = ta.trend.sma_indicator(ohlc['close'], 600)
 
         usdt = 1000
+        inital_wallet = usdt
         btc = 0
         last_index = ohlc.first_valid_index()
 
@@ -44,8 +53,14 @@ class Sma200600Bot(GenericBot):
             last_index = index
 
         final_result = usdt + btc * ohlc['close'].iloc[-1]
+        wallet = final_result
         print("Final result", final_result, 'USDT')
+        perf = str(round(((wallet - inital_wallet) / inital_wallet) * 100, 2)) + "%"
         # print("Buy and hold result", (1000 / ohlc['close'].iloc[0]) * ohlc['close'].iloc[-1], 'USDT')
+        print("Performance vs US Dollar :", perf)
+
+        backtest_result = BacktestResult(perf)
+        return backtest_result
 
 
 if __name__ == "__main__":
