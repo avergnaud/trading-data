@@ -3,7 +3,7 @@ import pandas as pd
 from backtest.backtest_result import BacktestResult
 from bot.generic_bot import GenericBot
 from input.binance_exchange.binance_client import BinanceClient
-from persistence.ohlc_dao import get_by_timestamp_interval
+from persistence.ohlc_dao import get_by_timestamp_interval, mongoDataToDataframe
 
 
 class Sma200600Bot(GenericBot):
@@ -25,8 +25,8 @@ class Sma200600Bot(GenericBot):
         return description
 
     def back_test_between(self, ohlc_definition, from_timestamp_seconds, to_timestamp_seconds):
-        ohlcs_list = get_by_timestamp_interval(ohlc_definition, from_timestamp_seconds, to_timestamp_seconds)
-        ohlcs = pd.DataFrame(ohlcs_list)
+        ohlcs = mongoDataToDataframe(
+            get_by_timestamp_interval(ohlc_definition, from_timestamp_seconds, to_timestamp_seconds))
         return self.backTest(ohlcs)
 
     def backTest(self, ohlc):

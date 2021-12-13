@@ -32,11 +32,12 @@ class MacdStochRsiBot(GenericBot):
         return description
 
     def back_test_between(self, ohlc_definition, from_timestamp_seconds, to_timestamp_seconds):
-        ohlcs_list = get_by_timestamp_interval(ohlc_definition, from_timestamp_seconds, to_timestamp_seconds)
-        ohlcs = pd.DataFrame(ohlcs_list)
+        ohlcs = mongoDataToDataframe(
+            get_by_timestamp_interval(ohlc_definition, from_timestamp_seconds, to_timestamp_seconds))
         return self.backTest(ohlcs)
 
     def backTest(self, ohlc):
+        dt = pd.DataFrame(columns=['date', 'position', 'price', 'frais', 'fiat', 'coins', 'wallet', 'drawBack'])
 
         ohlc['MACD'] = ta.trend.macd(ohlc['close'], 26, 12)
         ohlc['MACD_SIGNAL'] = ta.trend.macd_signal(ohlc['close'])
@@ -44,7 +45,6 @@ class MacdStochRsiBot(GenericBot):
         ohlc['STOCH_RSI'] = ta.momentum.stochrsi(ohlc['close'])
 
         usdt = 1000
-        initalWallet = usdt
         coin = 0
         wallet = 1000
         last_ath = 0
@@ -63,7 +63,7 @@ class MacdStochRsiBot(GenericBot):
                 # print("Buy COIN at", ohlc['close'][index], '$ the', index)
                 myrow = {'date': index, 'position': "Buy", 'price': row['close'], 'frais': frais, 'fiat': usdt,
                          'coins': coin, 'wallet': wallet, 'drawBack': (wallet - last_ath) / last_ath}
-                ohlc = ohlc.append(myrow, ignore_index=True)
+                dt = dt.append(myrow, ignore_index=True)
 
             # Sell
             if row['MACD'] < row['MACD_SIGNAL'] and row['STOCH_RSI'] > 0.3 and coin > 0:
@@ -77,13 +77,10 @@ class MacdStochRsiBot(GenericBot):
                 # print("Sell COIN at", ohlc['close'][index], '$ the', index)
                 myrow = {'date': index, 'position': "Sell", 'price': row['close'], 'frais': frais, 'fiat': usdt,
                          'coins': coin, 'wallet': wallet, 'drawBack': (wallet - last_ath) / last_ath}
-                ohlc = ohlc.append(myrow, ignore_index=True)
+                dt = dt.append(myrow, ignore_index=True)
 
-        print("Final balance :", round(wallet, 2), "$")
-        perf = str(round(((wallet - initalWallet) / initalWallet) * 100, 2)) + "%"
-        print("Performance vs US Dollar :", perf)
-
-        backtest_result = BacktestResult(perf)
+        backtest_result = BacktestResult()
+        backtest_result.setInformations(ohlc, dt, wallet, usdt)
         return backtest_result
 
 

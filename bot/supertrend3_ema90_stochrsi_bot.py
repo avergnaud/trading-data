@@ -36,8 +36,8 @@ class Supertrend3Ema90StochRsiBot(GenericBot):
         return description
 
     def back_test_between(self, ohlc_definition, from_timestamp_seconds, to_timestamp_seconds):
-        ohlcs_list = get_by_timestamp_interval(ohlc_definition, from_timestamp_seconds, to_timestamp_seconds)
-        ohlcs = pd.DataFrame(ohlcs_list)
+        ohlcs = mongoDataToDataframe(
+            get_by_timestamp_interval(ohlc_definition, from_timestamp_seconds, to_timestamp_seconds))
         return self.backTest(ohlcs)
 
     def backTest(self, ohlc):
@@ -69,7 +69,6 @@ class Supertrend3Ema90StochRsiBot(GenericBot):
         ohlc['SUPER_TREND_DIRECTION3'] = superTrend['SUPERTd_' + str(ST_length) + "_" + str(ST_multiplier)]
 
         usdt = 1000
-        initalWallet = usdt
         coin = 0
         wallet = 1000
         lastAth = 0
@@ -131,11 +130,8 @@ class Supertrend3Ema90StochRsiBot(GenericBot):
 
             lastRow = row
 
-        print("Final balance :", round(wallet, 2), "$")
-        perf = str(round(((wallet - initalWallet) / initalWallet) * 100, 2)) + "%"
-        print("Performance vs US Dollar :", perf)
-
-        backtest_result = BacktestResult(perf)
+        backtest_result = BacktestResult()
+        backtest_result.setInformations(ohlc, dt, wallet, usdt)
         return backtest_result
 
 
