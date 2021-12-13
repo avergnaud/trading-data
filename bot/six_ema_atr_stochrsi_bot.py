@@ -1,13 +1,13 @@
 import pandas as pd
 import ta
+
 from backtest.backtest_result import BacktestResult
+from bot.generic_bot import GenericBot
 from input.binance_exchange.binance_client import BinanceClient
 from persistence.ohlc_dao import get_by_timestamp_interval
-from bot.generic_bot import GenericBot
 
 
 class Ema6AtrStochRsiBot(GenericBot):
-
     NAME: str = "6_ema_stochastic_rsi"
 
     def __init__(self):
@@ -159,12 +159,7 @@ class Ema6AtrStochRsiBot(GenericBot):
 
             previous_row = row
 
-        iniClose = ohlc.iloc[0]['close']
-        lastClose = ohlc.iloc[len(ohlc) - 1]['close']
-        holdPorcentage = ((lastClose - iniClose) / iniClose) * 100
         algoPorcentage = ((wallet - inital_wallet) / inital_wallet) * 100
-        vsHoldPorcentage = ((algoPorcentage - holdPorcentage) / holdPorcentage) * 100
-
         print("Final balance :", round(wallet, 2), "$")
         perf = str(round(algoPorcentage, 2)) + "%"
         print("Performance vs US Dollar :", perf)

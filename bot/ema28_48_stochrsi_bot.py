@@ -6,7 +6,7 @@ import ta
 
 from backtest.backtest_result import BacktestResult
 from bot.generic_bot import GenericBot
-from persistence.ohlc_dao import mongoDataToDataframe, get_by_timestamp_interval
+from persistence.ohlc_dao import get_by_timestamp_interval, mongoDataToDataframe
 
 api_endpoint = 'https://ftx.com/api'
 api_key = os.getenv('FTX_API_KEY')
@@ -50,18 +50,19 @@ class Ema2848StochRsiBot(GenericBot):
         return str(r)
 
     def back_test_between(self, ohlc_definition, from_timestamp_seconds, to_timestamp_seconds):
-        ohlcs_list = get_by_timestamp_interval(ohlc_definition, from_timestamp_seconds, to_timestamp_seconds)
-        ohlcs = pd.DataFrame(ohlcs_list)
+        ohlcs = mongoDataToDataframe(
+            get_by_timestamp_interval(ohlc_definition, from_timestamp_seconds, to_timestamp_seconds))
         return self.backTest(ohlcs)
 
     def backTest(self, ohlc):
+        dt = pd.DataFrame(columns=['date', 'position', 'price', 'frais', 'fiat', 'coins', 'wallet', 'drawBack'])
 
         ohlc['EMA28'] = ta.trend.ema_indicator(ohlc['close'], 28)
         ohlc['EMA48'] = ta.trend.ema_indicator(ohlc['close'], 48)
         ohlc['STOCH_RSI'] = ta.momentum.stochrsi(ohlc['close'])
 
         usdt = 1000
-        initalWallet = usdt
+        inital_wallet = usdt
         coin = 0
         wallet = 1000
         last_ath = 0
@@ -80,7 +81,7 @@ class Ema2848StochRsiBot(GenericBot):
                 # print("Buy COIN at", ohlc['close'][index], '$ the', index)
                 myrow = {'date': index, 'position': "Buy", 'price': row['close'], 'frais': frais, 'fiat': usdt,
                          'coins': coin, 'wallet': wallet, 'drawBack': (wallet - last_ath) / last_ath}
-                ohlc = ohlc.append(myrow, ignore_index=True)
+                dt = dt.append(myrow, ignore_index=True)
 
             # Sell
             if row['EMA28'] < row['EMA48'] and row['STOCH_RSI'] > 0.2 and coin > 0:
@@ -94,13 +95,10 @@ class Ema2848StochRsiBot(GenericBot):
                 # print("Sell COIN at", ohlc['close'][index], '$ the', index)
                 myrow = {'date': index, 'position': "Sell", 'price': row['close'], 'frais': frais, 'fiat': usdt,
                          'coins': coin, 'wallet': wallet, 'drawBack': (wallet - last_ath) / last_ath}
-                ohlc = ohlc.append(myrow, ignore_index=True)
+                dt = dt.append(myrow, ignore_index=True)
 
-        print("Final balance :", round(wallet, 2), "$")
-        perf = str(round(((wallet - initalWallet) / initalWallet) * 100, 2)) + "%"
-        print("Performance vs US Dollar :", perf)
-
-        backtest_result = BacktestResult(perf)
+        backtest_result = BacktestResult()
+        backtest_result.setInformations(ohlc, dt, wallet, inital_wallet)
         return backtest_result
 
     # Utilisation en condition réelle
@@ -155,8 +153,9 @@ if __name__ == "__main__":
     # ohlcs = bclient.get_ohlc('ETHUSDT', '1h', 1514764800000, 1577836799000)
     # print(ohlcs)
     # entre le 01/01/2018 et le 31/12/2019
-    ohlc_brochain = mongoDataToDataframe(
-        get_by_timestamp_interval({'exchange': 'binance', 'pair': 'ETHUSDT', 'interval': '1h'}, 1514764800, 1577836799))
+    # ohlc_brochain = mongoDataToDataframe(
+    #     get_by_timestamp_interval({'exchange': 'binance', 'pair': 'ETHUSDT', 'interval': '1h'}, 1514764800, 1577836799))
     # print(ohlcs.size)
     ema2848stockrsi = Ema2848StochRsiBot()
-    ema2848stockrsi.backTest(ohlc_brochain)
+    ema2848stockrsi.back_test_between({'exchange': 'binance', 'pair': 'ETHUSDT', 'interval': '1h'}, 1514764800,
+                                      1577836799)
