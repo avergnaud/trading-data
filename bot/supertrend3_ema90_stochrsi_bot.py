@@ -69,6 +69,7 @@ class Supertrend3Ema90StochRsiBot(GenericBot):
         ohlc['SUPER_TREND_DIRECTION3'] = superTrend['SUPERTd_' + str(ST_length) + "_" + str(ST_multiplier)]
 
         usdt = 1000
+        initial_wallet = usdt
         coin = 0
         wallet = 1000
         lastAth = 0
@@ -131,7 +132,7 @@ class Supertrend3Ema90StochRsiBot(GenericBot):
             lastRow = row
 
         backtest_result = BacktestResult()
-        backtest_result.setInformations(ohlc, dt, wallet, usdt)
+        backtest_result.setInformations(ohlc, dt, wallet, initial_wallet)
         return backtest_result
 
 

@@ -45,6 +45,7 @@ class MacdStochRsiBot(GenericBot):
         ohlc['STOCH_RSI'] = ta.momentum.stochrsi(ohlc['close'])
 
         usdt = 1000
+        initial_wallet = usdt
         coin = 0
         wallet = 1000
         last_ath = 0
@@ -80,7 +81,7 @@ class MacdStochRsiBot(GenericBot):
                 dt = dt.append(myrow, ignore_index=True)
 
         backtest_result = BacktestResult()
-        backtest_result.setInformations(ohlc, dt, wallet, usdt)
+        backtest_result.setInformations(ohlc, dt, wallet, initial_wallet)
         return backtest_result
 
 

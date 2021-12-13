@@ -40,13 +40,14 @@ class BacktestResult:
         ini_close = ohlc.iloc[0]['close']
         last_close = ohlc.iloc[len(ohlc) - 1]['close']
 
+        self.inital_wallet = inital_wallet
+
         hold_porcentage = ((last_close - ini_close) / ini_close) * 100
         algo_porcentage = ((wallet - inital_wallet) / inital_wallet) * 100
         vs_hold_porcentage = ((algo_porcentage - hold_porcentage) / hold_porcentage) * 100
 
         self.performance = str(round(algo_porcentage, 2)) + "%"
-        self.inital_wallet = inital_wallet
-        self.final_wallet = round(wallet,2)
+        self.final_wallet = round(wallet, 2)
 
         self.performanceVSUSDollar = str(round(hold_porcentage, 2)) + "%"
         self.performanceVSBuyAndHold = str(round(vs_hold_porcentage, 2)) + "%"
@@ -67,4 +68,3 @@ class BacktestResult:
                                                  str(dt['date'][idworst]))
         self.worstDrawback = str(100 * round(dt['drawBack'].min(), 2)) + "%"
         self.totalFee = str(round(dt['frais'].sum(), 2)) + "$"
-
