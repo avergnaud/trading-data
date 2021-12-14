@@ -1,3 +1,4 @@
+from bot.adx_sma3_6_bot import AdxSma36Bot
 from bot.macd_stochrsi_bot import MacdStochRsiBot
 from bot.six_ema_atr_stochrsi_bot import Ema6AtrStochRsiBot
 from bot.ema28_48_stochrsi_bot import Ema2848StochRsiBot
@@ -13,7 +14,8 @@ def get_all_bot_names():
         IchimokuEma50StochRsiBot.NAME,
         Sma200600Bot.NAME,
         Supertrend3Ema90StochRsiBot.NAME,
-        MacdStochRsiBot.NAME
+        MacdStochRsiBot.NAME,
+        AdxSma36Bot.NAME
     ]
 
 
@@ -31,6 +33,8 @@ def get_bot_by_name(name):
             return Supertrend3Ema90StochRsiBot()
         case MacdStochRsiBot.NAME:
             return MacdStochRsiBot()
+        case AdxSma36Bot.NAME:
+            return AdxSma36Bot()
         case _:
             # Anything not matched by the above
             print(f"No bot found for {name}")

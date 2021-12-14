@@ -3,12 +3,10 @@ import ta
 
 from backtest.backtest_result import BacktestResult
 from bot.generic_bot import GenericBot
-from input.binance_exchange.binance_client import BinanceClient
 from persistence.ohlc_dao import get_by_timestamp_interval, mongoDataToDataframe
 
 
 class IchimokuEma50StochRsiBot(GenericBot):
-
     NAME: str = "ema50_stochastic_rsi_ichimoku"
 
     def __init__(self):
@@ -51,7 +49,7 @@ class IchimokuEma50StochRsiBot(GenericBot):
         dt = pd.DataFrame(columns=['date', 'position', 'price', 'frais', 'fiat', 'coins', 'wallet', 'drawBack'])
 
         # Exponential Moving Average
-        ohlc['EMA50']=ta.trend.ema_indicator(ohlc['close'], 50)
+        ohlc['EMA50'] = ta.trend.ema_indicator(ohlc['close'], 50)
 
         # Stochastic RSI
         ohlc['STOCH_RSI'] = ta.momentum.stochrsi(close=ohlc['close'])
@@ -126,8 +124,9 @@ class IchimokuEma50StochRsiBot(GenericBot):
 
 
 if __name__ == "__main__":
-    bclient = BinanceClient()
-    ohlcs = bclient.get_ohlc('EGLDUSDT', '1h', 1577836800)
+    ohlc_brochain = mongoDataToDataframe(
+        get_by_timestamp_interval({'exchange': 'binance', 'pair': 'EGLDUSDT', 'interval': '1h'}, 1514764800,
+                                  1577836799))
     # ohlc_brochain = get_by_timestamp({'exchange': 'binance', 'pair': 'ETHUSDT', 'interval': '1h'}, 1606939487)
     ichimokuemarsi_bot = IchimokuEma50StochRsiBot()
-    ichimokuemarsi_bot.backTest(ohlcs)
+    ichimokuemarsi_bot.backTest(ohlc_brochain)
