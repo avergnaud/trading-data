@@ -52,3 +52,9 @@ db.ohlc.find({exchange: 'kucoin', pair: 'ETH-USDT', interval: '2hour'}).sort( { 
 db.ohlc.find({exchange: 'binance', pair: 'BTCUSDT', interval: '4h'}).sort( { timestamp: -1 } ).limit(1)
 
 db.ohlc.aggregate({$group: {_id: {"exchange": "$exchange", "pair": "$pair", "interval": "$interval"}, count:{"$sum": 1}}})
+
+# raspberry pi
+install from source python3.10, then:
+'''
+sudo ln -s /usr/share/pyshared/lsb_release.py /usr/local/lib/python3.10/site-packages/lsb_release.py
+'''
