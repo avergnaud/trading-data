@@ -1,7 +1,20 @@
 from pymongo import MongoClient
+import os
+
+
+mongo_user = os.environ.get('CLOUD_MONGO_USER')
+if mongo_user is None:
+    raise ValueError('CLOUD_MONGO_USER env variable is not set')
+
+mongo_password = os.environ.get('CLOUD_MONGO_PASSWORD')
+if mongo_password is None:
+    raise ValueError('CLOUD_MONGO_PASSWORD env variable is not set')
+
+cloud_db_url = "mongodb+srv://" + mongo_user + ":" + mongo_password + "@cluster0.tfnok.mongodb.net/trading_data?retryWrites=true&w=majority"
 
 # create a client instance of MongoClient
-mongo_client = MongoClient('mongodb://localhost:27017')
+# mongo_client = MongoClient('mongodb://localhost:27017')
+mongo_client = MongoClient(cloud_db_url)
 
 # create a new database instance - if not exist
 db = mongo_client.trading_data
